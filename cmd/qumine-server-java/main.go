@@ -61,6 +61,9 @@ func main() {
 	// build everything
 	// serverUpdater
 	// pluginUpdater
+	// configure properties
+	// configure whitelist
+	// configure ops
 	wrapper := wrapper.NewWrapper()
 	api := api.NewAPI(wrapper)
 
