@@ -1,10 +1,8 @@
 package wrapper
 
 import (
-	"bufio"
 	"context"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -12,14 +10,15 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/qumine/qumine-server-java/internal/console"
 	"github.com/sirupsen/logrus"
 )
 
 type Wrapper struct {
-	cmd    *exec.Cmd
-	stdin  *bufio.Writer
-	stderr *bufio.Reader
-	stdout *bufio.Reader
+	Console *console.Console
+
+	cmd            *exec.Cmd
+	cmdStopTimeout time.Duration
 }
 
 func NewWrapper() *Wrapper {
@@ -33,10 +32,10 @@ func NewWrapper() *Wrapper {
 	stderr, _ := cmd.StderrPipe()
 	stdout, _ := cmd.StdoutPipe()
 	return &Wrapper{
-		cmd:    cmd,
-		stdin:  bufio.NewWriter(stdin),
-		stderr: bufio.NewReader(stderr),
-		stdout: bufio.NewReader(stdout),
+		Console: console.NewConsole(stdin, stderr, stdout),
+
+		cmd:            cmd,
+		cmdStopTimeout: 15 * time.Second,
 	}
 }
 
@@ -53,15 +52,7 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 		}
 	}()
 	go func() {
-		for {
-			line, err := w.stdout.ReadString('\n')
-			if err == io.EOF {
-				return
-			} else if err != nil {
-				logrus.WithError(err).Fatal("failed to read from server")
-			}
-			fmt.Print(line)
-		}
+		w.Console.Start()
 	}()
 
 	for {
@@ -74,37 +65,30 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 }
 
 func (w *Wrapper) Stop(wg *sync.WaitGroup) {
-	logrus.Info("stopping wrapper")
-	w.SendCommand("say Stopping server... 3")
-	time.Sleep(time.Second)
-	w.SendCommand("say Stopping server... 2")
-	time.Sleep(time.Second)
-	w.SendCommand("say Stopping server... 1")
-	time.Sleep(time.Second)
-	w.SendCommand("stop")
+	logrus.WithField("timeout", w.cmdStopTimeout).Info("stopping wrapper")
 
-	if err := w.cmd.Wait(); err != nil {
-		logrus.WithError(err).Error("stopping wrapper failed")
-	}
-	wg.Done()
-}
-
-func (w *Wrapper) SendCommand(c string) error {
-	logrus.WithField("c", c).Info("sending command")
-	if _, err := w.stdin.WriteString(fmt.Sprintf("%s\r\n", c)); err != nil {
-		logrus.WithError(err).Error("failed")
-	}
-	return w.stdin.Flush()
-}
-
-func (w *Wrapper) tailLogs() {
-	for {
-		line, err := w.stdout.ReadString('\n')
-		if err == io.EOF {
-			return
-		} else if err != nil {
-			logrus.WithError(err).Fatal("failed to read from server")
+	ctx, cancel := context.WithTimeout(context.Background(), w.cmdStopTimeout)
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				w.cmd.Process.Kill()
+				return
+			}
 		}
-		fmt.Print(line)
-	}
+	}()
+	go func() {
+		for i := 5; i > 0; i-- {
+			w.Console.SendCommand(fmt.Sprintf("say Stopping server in: %d", i))
+			time.Sleep(time.Second)
+		}
+		w.Console.SendCommand("stop")
+
+		if err := w.cmd.Wait(); err != nil {
+			logrus.WithError(err).Error("stopping wrapper failed")
+		}
+		cancel()
+		logrus.Info("stopped wrapper")
+		wg.Done()
+	}()
 }

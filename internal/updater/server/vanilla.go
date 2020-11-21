@@ -36,36 +36,42 @@ func NewVanillaUpdater(serverVersion string, serverDownloadAPI string, serverFor
 
 // Update updates the resource, if supported uses cache.
 func (vsu *VanillaUpdater) Update() error {
+	logrus.WithFields(logrus.Fields{
+		"type":          "VANILLA",
+		"version":       vsu.serverVersion,
+		"downloadAPI":   vsu.serverDownloadAPI,
+		"forceDownload": vsu.serverForceDownoad,
+	}).Info("checking for server updates")
+
 	logrus.Debug("getting VersionManifest")
 	versionManifest, err := getVersionManifest(vsu.serverDownloadAPI)
 	if err != nil {
 		return err
 	}
-	logrus.Info("got VersionManifest")
+	logrus.Trace("got VersionManifest")
 
-	logrus.Info("resolving version")
+	logrus.Debug("resolving version")
 	if vsu.serverVersion == "latest" {
 		vsu.serverVersion = versionManifest.Latest.Release
 	}
-	logrus.WithField("serverVersion", vsu.serverVersion).Debug("resolved version")
+	logrus.WithField("serverVersion", vsu.serverVersion).Trace("resolved version")
 
-	logrus.Info("resolving version details download URL")
+	logrus.Debug("resolving version details download URL")
 	var versionDetailsURL string
 	for i := 0; i < len(versionManifest.Versions); i++ {
 		if vsu.serverVersion == versionManifest.Versions[i].ID {
 			versionDetailsURL = versionManifest.Versions[i].URL
 		}
 	}
-	logrus.WithField("versionDetailsURL", versionDetailsURL).Debug("resolved version details download URL")
+	logrus.WithField("versionDetailsURL", versionDetailsURL).Trace("resolved version details download URL")
 
-	logrus.Info("getting version details")
+	logrus.Debug("getting version details")
 	versionDetails, err := getVersionDetails(versionDetailsURL)
 	if err != nil {
 		return err
 	}
-	logrus.WithField("versionDetails", versionDetails).Debug("got version details")
+	logrus.WithField("versionDetails", versionDetails).Trace("got version details")
 
-	logrus.Info("checking if server is outdated")
 	outdated, err := vsu.isOutdated(versionDetails)
 	if err != nil {
 		return err
@@ -80,11 +86,12 @@ func (vsu *VanillaUpdater) Update() error {
 	if err != nil {
 		return err
 	}
-	logrus.Debug("updated server")
 
-	logrus.Info("saving new hash")
+	logrus.Debug("saving new hash")
 	vsu.saveCurrentHash(versionDetails.Downloads.Client.Sha1)
-	logrus.Debug("saved new hash")
+	logrus.Trace("saved new hash")
+
+	logrus.Info("updated server")
 	return nil
 }
 
@@ -111,17 +118,17 @@ func (vsu *VanillaUpdater) isOutdated(versionDetails *VersionDetails) (bool, err
 	return false, nil
 }
 
-func (vsu *VanillaUpdater) download(jarURL string) error {
-	logrus.WithField("jarURL", jarURL).Info("downloading jar")
-	rsp, getErr := http.Get(jarURL)
+func (vsu *VanillaUpdater) download(url string) error {
+	logrus.WithField("url", url).Info("downloading jar")
+	rsp, getErr := http.Get(url)
 	if getErr != nil {
 		logrus.WithError(getErr).Error("downloading jar failed")
 		return getErr
 	}
 	defer rsp.Body.Close()
-	logrus.WithField("contentLength", rsp.ContentLength).Debug("downloaded jar")
+	logrus.WithField("contentLength", rsp.ContentLength).Trace("downloaded jar")
 
-	logrus.Info("reading jar")
+	logrus.Debug("reading jar")
 	if rsp.Body != nil {
 		defer rsp.Body.Close()
 	}
@@ -130,15 +137,15 @@ func (vsu *VanillaUpdater) download(jarURL string) error {
 		logrus.WithError(readErr).Error("reading jar failed")
 		return readErr
 	}
-	logrus.WithField("body", rsp.Body).Debug("read jar")
+	logrus.WithField("body", rsp.Body).Trace("read jar")
 
-	logrus.Info("saving jar")
+	logrus.Debug("saving jar")
 	saveErr := vsu.saveCurrentJar(body)
 	if saveErr != nil {
 		logrus.WithError(saveErr).Error("saving jar failed")
 		return saveErr
 	}
-	logrus.Debug("saved jar")
+	logrus.Trace("saved jar")
 	return nil
 }
 

@@ -4,10 +4,10 @@ import "github.com/sirupsen/logrus"
 
 func init() {
 	//logrus.SetReportCaller(true)
-	logrus.SetFormatter(&logrus.TextFormatter{
-		DisableColors: true,
-		FullTimestamp: true,
-	})
+	// logrus.SetFormatter(&logrus.TextFormatter{
+	// 	DisableColors: true,
+	// 	FullTimestamp: true,
+	// })
 }
 
 func setLogLevel(level string) {

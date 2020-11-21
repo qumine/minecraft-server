@@ -137,15 +137,15 @@ type VersionDetails struct {
 }
 
 func getVersionManifest(versionManifestURL string) (*VersionManifest, error) {
-	logrus.WithField("versionManifestURL", versionManifestURL).Info("downloading versionManifest")
+	logrus.WithField("versionManifestURL", versionManifestURL).Debug("downloading versionManifest")
 	rsp, getErr := http.Get(versionManifestURL)
 	if getErr != nil {
 		logrus.WithError(getErr).Error("downloading versionManifest failed")
 		return nil, getErr
 	}
-	logrus.WithField("contentLength", rsp.ContentLength).Debug("downloaded versionManifest")
+	logrus.WithField("contentLength", rsp.ContentLength).Trace("downloaded versionManifest")
 
-	logrus.Info("reading versionManifest")
+	logrus.Debug("reading versionManifest")
 	if rsp.Body != nil {
 		defer rsp.Body.Close()
 	}
@@ -154,30 +154,30 @@ func getVersionManifest(versionManifestURL string) (*VersionManifest, error) {
 		logrus.WithError(readErr).Error("reading versionManifest failed")
 		return nil, readErr
 	}
-	logrus.WithField("body", rsp.Body).Debug("read versionManifest")
+	logrus.WithField("body", rsp.Body).Trace("read versionManifest")
 
-	logrus.Info("unmarshalling versionManifest")
+	logrus.Debug("unmarshalling versionManifest")
 	versionManifest := &VersionManifest{}
 	jsonErr := json.Unmarshal(body, &versionManifest)
 	if jsonErr != nil {
 		logrus.WithError(jsonErr).Error("unmarshalling versionManifest failed")
 		return nil, jsonErr
 	}
-	logrus.WithField("versionManifest", versionManifest).Debug("unmarshalled versionManifest")
+	logrus.WithField("versionManifest", versionManifest).Trace("unmarshalled versionManifest")
 
 	return versionManifest, nil
 }
 
 func getVersionDetails(versionDetailsURL string) (*VersionDetails, error) {
-	logrus.WithField("versionDetailsURL", versionDetailsURL).Info("downloading versionDetails")
+	logrus.WithField("versionDetailsURL", versionDetailsURL).Debug("downloading versionDetails")
 	rsp, getErr := http.Get(versionDetailsURL)
 	if getErr != nil {
 		logrus.WithError(getErr).Error("downloading versionDetails failed")
 		return nil, getErr
 	}
-	logrus.WithField("contentLength", rsp.ContentLength).Debug("downloaded versionDetails")
+	logrus.WithField("contentLength", rsp.ContentLength).Trace("downloaded versionDetails")
 
-	logrus.Info("reading versionDetails")
+	logrus.Debug("reading versionDetails")
 	if rsp.Body != nil {
 		defer rsp.Body.Close()
 	}
@@ -186,15 +186,15 @@ func getVersionDetails(versionDetailsURL string) (*VersionDetails, error) {
 		logrus.WithError(readErr).Error("reading versionDetails failed")
 		return nil, readErr
 	}
-	logrus.WithField("body", rsp.Body).Debug("read versionDetails")
+	logrus.WithField("body", rsp.Body).Trace("read versionDetails")
 
-	logrus.Info("unmarshalling versionDetails")
+	logrus.Debug("unmarshalling versionDetails")
 	versionDetails := &VersionDetails{}
 	jsonErr := json.Unmarshal(body, &versionDetails)
 	if jsonErr != nil {
 		logrus.WithError(jsonErr).Error("unmarshalling versionDetails failed")
 		return nil, jsonErr
 	}
-	logrus.WithField("versionDetails", versionDetails).Debug("unmarshalled versionDetails")
+	logrus.WithField("versionDetails", versionDetails).Trace("unmarshalled versionDetails")
 	return versionDetails, nil
 }

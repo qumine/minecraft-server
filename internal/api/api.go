@@ -11,7 +11,7 @@ import (
 
 // API represents the api server
 type API struct {
-	w *wrapper.Wrapper
+	Wrapper *wrapper.Wrapper
 
 	httpServer *http.Server
 }
@@ -21,7 +21,8 @@ func NewAPI(w *wrapper.Wrapper) *API {
 	r := http.NewServeMux()
 
 	api := &API{
-		w: w,
+		Wrapper: w,
+
 		httpServer: &http.Server{
 			Addr:    "0.0.0.0:8080",
 			Handler: r,
@@ -58,5 +59,6 @@ func (a *API) Stop(wg *sync.WaitGroup) {
 	if err := a.httpServer.Close(); err != nil {
 		logrus.WithError(err).Error("stopping api failed")
 	}
+	logrus.Info("stopped api")
 	wg.Done()
 }
