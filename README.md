@@ -9,10 +9,12 @@ Docker Image for running minecraft servers.
 
 # Status
 
-- [ ] Basic download of server JAR.
-- [ ] Basic wrapping of JVM process.
-- [ ] Basic updating of server JAR.
+- [X] Basic download of server JAR.
+- [X] Basic updating of server JAR.
+- [X] Basic wrapping of JVM process.
 - [ ] Basic API health endpoints.
+- [ ] Basic download of server plugins.
+- [ ] Basic updating of server plugins.
 - [ ] GRPC API for controlling the server remotely(start, stop, ).
 - [ ] GRPC API for log streaming.
 - [ ] GRPC API for console streaming(in, out).

@@ -3,10 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"os/exec"
 	"os/signal"
 	"syscall"
 
+	su "github.com/qumine/qumine-server-java/internal/updater/server"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,6 +24,13 @@ var (
 	versionFlag bool
 	debugFlag   bool
 	traceFlag   bool
+
+	serverTypeFlag          string
+	serverVersionFlag       string
+	serverDownloadApiFlag   string
+	serverDownloadForceFlag bool
+
+	forceDownloadPluginsFlag bool
 )
 
 func init() {
@@ -28,6 +38,13 @@ func init() {
 	flag.BoolVar(&versionFlag, "version", false, "Show the current version")
 	flag.BoolVar(&debugFlag, "debug", false, "Enable debugging log level")
 	flag.BoolVar(&traceFlag, "trace", false, "Enable trace log level")
+
+	flag.StringVar(&serverTypeFlag, "server-type", "vanilla", "Which server type to use.")
+	flag.StringVar(&serverVersionFlag, "server-version", "latest", "Which server version to use.")
+	flag.StringVar(&serverDownloadApiFlag, "server-download-api", "", "Url to the server download api.")
+	flag.BoolVar(&serverDownloadForceFlag, "server-download-force", false, "Force the download of the server jar")
+
+	flag.BoolVar(&forceDownloadPluginsFlag, "force-download-plugins", false, "Force the download of the server plugins")
 	flag.Parse()
 }
 
@@ -43,12 +60,26 @@ func main() {
 	if debugFlag {
 		enableDebug()
 	}
-	if debugFlag {
+	if traceFlag {
 		enableTrace()
 	}
 
+	serverUpdater := su.NewVanillaUpdater(serverVersionFlag, serverDownloadApiFlag, serverDownloadForceFlag)
+	serverUpdater.Update()
+
+	logrus.Info("writing eula.txt")
+	ioutil.WriteFile("./eula.txt", []byte("eula=true"), os.ModeAppend)
+
+	logrus.Info("handing over to java")
+	cmd := exec.Command("java", "-jar", "server.jar")
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = os.Stdout
+	cmd.Stdin = os.Stdin
+	cmd.Start()
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+
+	go cmd.Wait()
 
 	<-c
 }
