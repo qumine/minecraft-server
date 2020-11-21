@@ -1,15 +1,16 @@
 package main
 
 import (
+	"context"
 	"flag"
-	"fmt"
-	"io/ioutil"
 	"os"
-	"os/exec"
 	"os/signal"
+	"sync"
 	"syscall"
 
+	"github.com/qumine/qumine-server-java/internal/api"
 	su "github.com/qumine/qumine-server-java/internal/updater/server"
+	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 )
 
@@ -22,13 +23,12 @@ var (
 var (
 	helpFlag    bool
 	versionFlag bool
-	debugFlag   bool
-	traceFlag   bool
+	logLevel    string
 
-	serverTypeFlag          string
-	serverVersionFlag       string
-	serverDownloadApiFlag   string
-	serverDownloadForceFlag bool
+	serverType         string
+	serverVersion      string
+	serverDownloadAPI  string
+	serverForceDownoad bool
 
 	forceDownloadPluginsFlag bool
 )
@@ -36,70 +36,50 @@ var (
 func init() {
 	flag.BoolVar(&helpFlag, "help", false, "Show this page")
 	flag.BoolVar(&versionFlag, "version", false, "Show the current version")
-	flag.BoolVar(&debugFlag, "debug", false, "Enable debugging log level")
-	flag.BoolVar(&traceFlag, "trace", false, "Enable trace log level")
+	flag.StringVar(&logLevel, "log-level", "info", "Enable debugging log level")
 
-	flag.StringVar(&serverTypeFlag, "server-type", "vanilla", "Which server type to use.")
-	flag.StringVar(&serverVersionFlag, "server-version", "latest", "Which server version to use.")
-	flag.StringVar(&serverDownloadApiFlag, "server-download-api", "", "Url to the server download api.")
-	flag.BoolVar(&serverDownloadForceFlag, "server-download-force", false, "Force the download of the server jar")
+	flag.StringVar(&serverType, "server-type", "vanilla", "Which server type to use.")
+	flag.StringVar(&serverVersion, "server-version", "latest", "Which server version to use.")
+	flag.StringVar(&serverDownloadAPI, "server-download-api", "", "Url to the server download api.")
+	flag.BoolVar(&serverForceDownoad, "server-force-download", false, "Force the download of the server jar")
 
 	flag.BoolVar(&forceDownloadPluginsFlag, "force-download-plugins", false, "Force the download of the server plugins")
 	flag.Parse()
-}
 
-func main() {
 	if helpFlag {
-		showHelp()
+		showUsage()
 	}
-
 	if versionFlag {
 		showVersion()
 	}
+}
 
-	if debugFlag {
-		enableDebug()
-	}
-	if traceFlag {
-		enableTrace()
-	}
+func main() {
+	// configure logging
+	setLogLevel(logLevel)
 
-	serverUpdater := su.NewVanillaUpdater(serverVersionFlag, serverDownloadApiFlag, serverDownloadForceFlag)
-	serverUpdater.Update()
+	// build everything
+	// serverUpdater
+	// pluginUpdater
+	wrapper := wrapper.NewWrapper()
+	api := api.NewAPI(wrapper)
 
-	logrus.Info("writing eula.txt")
-	ioutil.WriteFile("./eula.txt", []byte("eula=true"), os.ModeAppend)
+	var updater su.Updater
+	updater = su.NewVanillaUpdater(serverVersion, serverDownloadAPI, serverForceDownoad)
+	updater.Update()
 
-	logrus.Info("handing over to java")
-	cmd := exec.Command("java", "-jar", "server.jar")
-	cmd.Stderr = os.Stderr
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = os.Stdin
-	cmd.Start()
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
+	ctx, cancel := context.WithCancel(context.Background())
+	wg := &sync.WaitGroup{}
 
-	go cmd.Wait()
+	go wrapper.Start(ctx, wg)
+	go api.Start(ctx, wg)
 
 	<-c
-}
+	logrus.Info("interrupt received, stopping")
 
-func showHelp() {
-	flag.Usage()
-	os.Exit(0)
-}
-
-func showVersion() {
-	fmt.Printf("%v, commit %v, built at %v", version, commit, date)
-	os.Exit(0)
-}
-
-func enableDebug() {
-	logrus.SetLevel(logrus.DebugLevel)
-	logrus.Debug("debugging enabled")
-}
-
-func enableTrace() {
-	logrus.SetLevel(logrus.TraceLevel)
-	logrus.Debug("tracing enabled")
+	cancel()
+	wg.Wait()
+	logrus.Info("stopped")
 }

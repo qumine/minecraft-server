@@ -17,20 +17,20 @@ const (
 
 // VanillaUpdater the updater for vanilla servers.
 type VanillaUpdater struct {
-	serverVersion       string
-	serverDownloadAPI   string
-	serverDownloadForce bool
+	serverVersion      string
+	serverDownloadAPI  string
+	serverForceDownoad bool
 }
 
 // NewVanillaUpdater creates a new vanilla updater.
-func NewVanillaUpdater(serverVersion string, serverDownloadAPI string, serverDownloadForce bool) *VanillaUpdater {
+func NewVanillaUpdater(serverVersion string, serverDownloadAPI string, serverForceDownoad bool) *VanillaUpdater {
 	if len(serverDownloadAPI) < 1 {
 		serverDownloadAPI = vanillaDownloadAPI
 	}
 	return &VanillaUpdater{
-		serverVersion:       serverVersion,
-		serverDownloadAPI:   serverDownloadAPI,
-		serverDownloadForce: serverDownloadForce,
+		serverVersion:      serverVersion,
+		serverDownloadAPI:  serverDownloadAPI,
+		serverForceDownoad: serverForceDownoad,
 	}
 }
 
@@ -89,7 +89,7 @@ func (vsu *VanillaUpdater) Update() error {
 }
 
 func (vsu *VanillaUpdater) isOutdated(versionDetails *VersionDetails) (bool, error) {
-	if vsu.serverDownloadForce {
+	if vsu.serverForceDownoad {
 		return true, nil
 	}
 
