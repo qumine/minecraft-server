@@ -3,6 +3,7 @@ release:
   github:
     owner: qumine
     name: qumine-server-java
+  prerelease: auto
 before:
   hooks:
     - go mod download
