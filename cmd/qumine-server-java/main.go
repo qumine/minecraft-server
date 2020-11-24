@@ -9,7 +9,7 @@ import (
 	"syscall"
 
 	"github.com/qumine/qumine-server-java/internal/api"
-	su "github.com/qumine/qumine-server-java/internal/updater/server"
+	"github.com/qumine/qumine-server-java/internal/updater/server"
 	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 )
@@ -67,9 +67,14 @@ func main() {
 	wrapper := wrapper.NewWrapper()
 	api := api.NewAPI(wrapper)
 
-	var updater su.Updater
-	updater = su.NewVanillaUpdater(serverVersion, serverDownloadAPI, serverForceDownoad)
-	updater.Update()
+	updater, err := server.NewUpdater(serverType, serverVersion, serverDownloadAPI, serverForceDownoad)
+	if err != nil {
+		logrus.WithError(err).Fatal("Unsupported serverType")
+	}
+	// TODO: If jar exists continue
+	if err := updater.Update(); err != nil {
+		logrus.WithError(err).Fatal("Failed to update server")
+	}
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)

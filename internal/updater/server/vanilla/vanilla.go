@@ -1,4 +1,4 @@
-package server
+package vanilla
 
 import (
 	"crypto/sha1"
@@ -15,22 +15,22 @@ const (
 	vanillaDownloadAPI = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 )
 
-// VanillaUpdater the updater for vanilla servers.
+// VanillaUpdater is the updater for vanilla servers.
 type VanillaUpdater struct {
-	serverVersion      string
-	serverDownloadAPI  string
-	serverForceDownoad bool
+	serverVersion       string
+	serverDownloadAPI   string
+	serverForceDownload bool
 }
 
 // NewVanillaUpdater creates a new vanilla updater.
-func NewVanillaUpdater(serverVersion string, serverDownloadAPI string, serverForceDownoad bool) *VanillaUpdater {
+func NewVanillaUpdater(serverVersion string, serverDownloadAPI string, serverForceDownload bool) *VanillaUpdater {
 	if len(serverDownloadAPI) < 1 {
 		serverDownloadAPI = vanillaDownloadAPI
 	}
 	return &VanillaUpdater{
-		serverVersion:      serverVersion,
-		serverDownloadAPI:  serverDownloadAPI,
-		serverForceDownoad: serverForceDownoad,
+		serverVersion:       serverVersion,
+		serverDownloadAPI:   serverDownloadAPI,
+		serverForceDownload: serverForceDownload,
 	}
 }
 
@@ -40,7 +40,7 @@ func (vsu *VanillaUpdater) Update() error {
 		"type":          "VANILLA",
 		"version":       vsu.serverVersion,
 		"downloadAPI":   vsu.serverDownloadAPI,
-		"forceDownload": vsu.serverForceDownoad,
+		"forceDownload": vsu.serverForceDownload,
 	}).Info("checking for server updates")
 
 	logrus.Debug("getting VersionManifest")
@@ -57,16 +57,16 @@ func (vsu *VanillaUpdater) Update() error {
 	logrus.WithField("serverVersion", vsu.serverVersion).Trace("resolved version")
 
 	logrus.Debug("resolving version details download URL")
-	var versionDetailsURL string
+	var versionDetailsDownloadURL string
 	for i := 0; i < len(versionManifest.Versions); i++ {
 		if vsu.serverVersion == versionManifest.Versions[i].ID {
-			versionDetailsURL = versionManifest.Versions[i].URL
+			versionDetailsDownloadURL = versionManifest.Versions[i].URL
 		}
 	}
-	logrus.WithField("versionDetailsURL", versionDetailsURL).Trace("resolved version details download URL")
+	logrus.WithField("url", versionDetailsDownloadURL).Trace("resolved version details download URL")
 
-	logrus.Debug("getting version details")
-	versionDetails, err := getVersionDetails(versionDetailsURL)
+	logrus.WithField("url", versionDetailsDownloadURL).Debug("getting version details")
+	versionDetails, err := getVersionDetails(versionDetailsDownloadURL)
 	if err != nil {
 		return err
 	}
@@ -96,7 +96,7 @@ func (vsu *VanillaUpdater) Update() error {
 }
 
 func (vsu *VanillaUpdater) isOutdated(versionDetails *VersionDetails) (bool, error) {
-	if vsu.serverForceDownoad {
+	if vsu.serverForceDownload {
 		return true, nil
 	}
 
