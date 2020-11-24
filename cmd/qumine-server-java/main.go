@@ -10,9 +10,9 @@ import (
 	"syscall"
 
 	"github.com/qumine/qumine-server-java/internal/api"
-	"github.com/qumine/qumine-server-java/internal/properties"
-	"github.com/qumine/qumine-server-java/internal/updater/server"
-	"github.com/qumine/qumine-server-java/internal/wrapper"
+	sp "github.com/qumine/qumine-server-java/internal/server/properties"
+	su "github.com/qumine/qumine-server-java/internal/server/updater"
+	sw "github.com/qumine/qumine-server-java/internal/server/wrapper"
 	"github.com/sirupsen/logrus"
 )
 
@@ -37,14 +37,14 @@ func init() {
 }
 
 func main() {
-	properties.Configure()
+	sp.Configure()
 	configureWhitelist()
 	configureOperators()
 
 	updateServer()
 	updatePlugins()
 
-	wrapper := wrapper.NewWrapper()
+	wrapper := sw.NewWrapper()
 	api := api.NewAPI(wrapper)
 
 	c := make(chan os.Signal, 1)
@@ -86,7 +86,7 @@ func configureOperators() {
 }
 
 func updateServer() {
-	updater, err := server.NewUpdater()
+	updater, err := su.NewUpdater()
 	if err != nil {
 		logrus.WithError(err).Fatal("Unsupported serverType")
 	}

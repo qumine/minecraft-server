@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/qumine/qumine-server-java/internal/updater/server/vanilla"
-	"github.com/qumine/qumine-server-java/internal/updater/server/yatopia"
+	"github.com/qumine/qumine-server-java/internal/server/updater/vanilla"
+	"github.com/qumine/qumine-server-java/internal/server/updater/yatopia"
 	"github.com/qumine/qumine-server-java/internal/utils"
 )
 

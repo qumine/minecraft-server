@@ -5,7 +5,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/qumine/qumine-server-java/internal/console"
+	"github.com/qumine/qumine-server-java/internal/server/console"
 )
 
 type Wrapper struct {
