@@ -3,12 +3,14 @@ package main
 import (
 	"context"
 	"flag"
+	"fmt"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
 
 	"github.com/qumine/qumine-server-java/internal/api"
+	"github.com/qumine/qumine-server-java/internal/properties"
 	"github.com/qumine/qumine-server-java/internal/updater/server"
 	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
@@ -23,29 +25,9 @@ var (
 var (
 	helpFlag    bool
 	versionFlag bool
-	logLevel    string
-
-	serverType         string
-	serverVersion      string
-	serverDownloadAPI  string
-	serverForceDownoad bool
-
-	forceDownloadPluginsFlag bool
 )
 
 func init() {
-	flag.BoolVar(&helpFlag, "help", false, "Show this page")
-	flag.BoolVar(&versionFlag, "version", false, "Show the current version")
-	flag.StringVar(&logLevel, "log-level", "info", "Enable debugging log level")
-
-	flag.StringVar(&serverType, "server-type", "vanilla", "Which server type to use.")
-	flag.StringVar(&serverVersion, "server-version", "latest", "Which server version to use.")
-	flag.StringVar(&serverDownloadAPI, "server-download-api", "", "Url to the server download api.")
-	flag.BoolVar(&serverForceDownoad, "server-force-download", false, "Force the download of the server jar")
-
-	flag.BoolVar(&forceDownloadPluginsFlag, "force-download-plugins", false, "Force the download of the server plugins")
-	flag.Parse()
-
 	if helpFlag {
 		showUsage()
 	}
@@ -55,26 +37,15 @@ func init() {
 }
 
 func main() {
-	// configure logging
-	setLogLevel(logLevel)
+	properties.Configure()
+	configureWhitelist()
+	configureOperators()
 
-	// build everything
-	// serverUpdater
-	// pluginUpdater
-	// configure properties
-	// configure whitelist
-	// configure ops
+	updateServer()
+	updatePlugins()
+
 	wrapper := wrapper.NewWrapper()
 	api := api.NewAPI(wrapper)
-
-	updater, err := server.NewUpdater(serverType, serverVersion, serverDownloadAPI, serverForceDownoad)
-	if err != nil {
-		logrus.WithError(err).Fatal("Unsupported serverType")
-	}
-	// TODO: If jar exists continue
-	if err := updater.Update(); err != nil {
-		logrus.WithError(err).Fatal("Failed to update server")
-	}
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
@@ -90,4 +61,42 @@ func main() {
 	cancel()
 	wg.Wait()
 	logrus.Info("stopped")
+}
+
+func showUsage() {
+	flag.Usage()
+	os.Exit(0)
+}
+
+func showVersion() {
+	fmt.Printf("%v, commit %v, built at %v", version, commit, date)
+	os.Exit(0)
+}
+
+func configureServerProperties() {
+	// TODO: Configure the server.properties
+}
+
+func configureWhitelist() {
+	// TODO: Configure the whitelist.json
+}
+
+func configureOperators() {
+	// TODO: Configure ops.json
+}
+
+func updateServer() {
+	updater, err := server.NewUpdater()
+	if err != nil {
+		logrus.WithError(err).Fatal("Unsupported serverType")
+	}
+	// TODO: If jar exists continue
+	if err := updater.Update(); err != nil {
+		logrus.WithError(err).Fatal("Failed to update server")
+	}
+	updater = nil
+}
+
+func updatePlugins() {
+	// TODO: Update all Plugins
 }

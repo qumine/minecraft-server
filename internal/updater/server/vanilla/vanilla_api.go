@@ -137,7 +137,7 @@ type VersionDetails struct {
 }
 
 func getVersionManifest(versionManifestURL string) (*VersionManifest, error) {
-	logrus.WithField("versionManifestURL", versionManifestURL).Debug("downloading versionManifest")
+	logrus.WithField("url", versionManifestURL).Debug("downloading versionManifest")
 	rsp, getErr := http.Get(versionManifestURL)
 	if getErr != nil {
 		logrus.WithError(getErr).Error("downloading versionManifest failed")
@@ -169,7 +169,7 @@ func getVersionManifest(versionManifestURL string) (*VersionManifest, error) {
 }
 
 func getVersionDetails(versionDetailsURL string) (*VersionDetails, error) {
-	logrus.WithField("versionDetailsURL", versionDetailsURL).Debug("downloading versionDetails")
+	logrus.WithField("url", versionDetailsURL).Debug("downloading versionDetails")
 	rsp, getErr := http.Get(versionDetailsURL)
 	if getErr != nil {
 		logrus.WithError(getErr).Error("downloading versionDetails failed")

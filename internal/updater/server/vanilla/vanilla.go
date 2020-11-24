@@ -8,58 +8,58 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
 const (
-	vanillaDownloadAPI = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+	serverVersion     = "latest"
+	serverForceUpdate = false
+	serverVanillaAPI  = "https://launchermeta.mojang.com/mc/game/version_manifest.json"
 )
 
-// VanillaUpdater is the updater for vanilla servers.
-type VanillaUpdater struct {
-	serverVersion       string
-	serverDownloadAPI   string
-	serverForceDownload bool
+// Updater is the updater for vanilla servers.
+type Updater struct {
+	serverVersion     string
+	serverForceUpdate bool
+	serverVanillaAPI  string
 }
 
 // NewVanillaUpdater creates a new vanilla updater.
-func NewVanillaUpdater(serverVersion string, serverDownloadAPI string, serverForceDownload bool) *VanillaUpdater {
-	if len(serverDownloadAPI) < 1 {
-		serverDownloadAPI = vanillaDownloadAPI
-	}
-	return &VanillaUpdater{
-		serverVersion:       serverVersion,
-		serverDownloadAPI:   serverDownloadAPI,
-		serverForceDownload: serverForceDownload,
+func NewVanillaUpdater() *Updater {
+	return &Updater{
+		serverVersion:     utils.GetEnvString("SERVER_VERSION", serverVersion),
+		serverForceUpdate: utils.GetEnvBool("SERVER_FORCE_UPDATE", serverForceUpdate),
+		serverVanillaAPI:  utils.GetEnvString("SERVER_VANILLA_API", serverVanillaAPI),
 	}
 }
 
 // Update updates the resource, if supported uses cache.
-func (vsu *VanillaUpdater) Update() error {
+func (u *Updater) Update() error {
 	logrus.WithFields(logrus.Fields{
-		"type":          "VANILLA",
-		"version":       vsu.serverVersion,
-		"downloadAPI":   vsu.serverDownloadAPI,
-		"forceDownload": vsu.serverForceDownload,
+		"type":        "VANILLA",
+		"version":     u.serverVersion,
+		"forceUpdate": u.serverForceUpdate,
+		"vanillaAPI":  u.serverVanillaAPI,
 	}).Info("checking for server updates")
 
 	logrus.Debug("getting VersionManifest")
-	versionManifest, err := getVersionManifest(vsu.serverDownloadAPI)
+	versionManifest, err := getVersionManifest(u.serverVanillaAPI)
 	if err != nil {
 		return err
 	}
 	logrus.Trace("got VersionManifest")
 
 	logrus.Debug("resolving version")
-	if vsu.serverVersion == "latest" {
-		vsu.serverVersion = versionManifest.Latest.Release
+	if u.serverVersion == "latest" {
+		u.serverVersion = versionManifest.Latest.Release
 	}
-	logrus.WithField("serverVersion", vsu.serverVersion).Trace("resolved version")
+	logrus.WithField("serverVersion", u.serverVersion).Trace("resolved version")
 
 	logrus.Debug("resolving version details download URL")
 	var versionDetailsDownloadURL string
 	for i := 0; i < len(versionManifest.Versions); i++ {
-		if vsu.serverVersion == versionManifest.Versions[i].ID {
+		if u.serverVersion == versionManifest.Versions[i].ID {
 			versionDetailsDownloadURL = versionManifest.Versions[i].URL
 		}
 	}
@@ -72,7 +72,7 @@ func (vsu *VanillaUpdater) Update() error {
 	}
 	logrus.WithField("versionDetails", versionDetails).Trace("got version details")
 
-	outdated, err := vsu.isOutdated(versionDetails)
+	outdated, err := u.isOutdated(versionDetails)
 	if err != nil {
 		return err
 	}
@@ -82,21 +82,21 @@ func (vsu *VanillaUpdater) Update() error {
 	}
 
 	logrus.Info("server outdated, updating...")
-	err = vsu.download(versionDetails.Downloads.Server.URL)
+	err = u.download(versionDetails.Downloads.Server.URL)
 	if err != nil {
 		return err
 	}
 
 	logrus.Debug("saving new hash")
-	vsu.saveCurrentHash(versionDetails.Downloads.Client.Sha1)
+	u.saveCurrentHash(versionDetails.Downloads.Client.Sha1)
 	logrus.Trace("saved new hash")
 
 	logrus.Info("updated server")
 	return nil
 }
 
-func (vsu *VanillaUpdater) isOutdated(versionDetails *VersionDetails) (bool, error) {
-	if vsu.serverForceDownload {
+func (u *Updater) isOutdated(versionDetails *VersionDetails) (bool, error) {
+	if u.serverForceUpdate {
 		return true, nil
 	}
 
@@ -107,7 +107,7 @@ func (vsu *VanillaUpdater) isOutdated(versionDetails *VersionDetails) (bool, err
 		return true, nil
 	}
 
-	currentHash, err := vsu.loadCurrentHash()
+	currentHash, err := u.loadCurrentHash()
 	if err != nil {
 		return true, nil
 	}
@@ -118,7 +118,7 @@ func (vsu *VanillaUpdater) isOutdated(versionDetails *VersionDetails) (bool, err
 	return false, nil
 }
 
-func (vsu *VanillaUpdater) download(url string) error {
+func (u *Updater) download(url string) error {
 	logrus.WithField("url", url).Info("downloading jar")
 	rsp, getErr := http.Get(url)
 	if getErr != nil {
@@ -140,7 +140,7 @@ func (vsu *VanillaUpdater) download(url string) error {
 	logrus.WithField("body", rsp.Body).Trace("read jar")
 
 	logrus.Debug("saving jar")
-	saveErr := vsu.saveCurrentJar(body)
+	saveErr := u.saveCurrentJar(body)
 	if saveErr != nil {
 		logrus.WithError(saveErr).Error("saving jar failed")
 		return saveErr
@@ -149,7 +149,7 @@ func (vsu *VanillaUpdater) download(url string) error {
 	return nil
 }
 
-func (vsu *VanillaUpdater) loadCurrentHash() (string, error) {
+func (u *Updater) loadCurrentHash() (string, error) {
 	file, openErr := os.Open("server.jar")
 	if openErr != nil {
 		return "", openErr
@@ -163,7 +163,7 @@ func (vsu *VanillaUpdater) loadCurrentHash() (string, error) {
 	return hex.EncodeToString(hashInBytes), nil
 }
 
-func (vsu *VanillaUpdater) saveCurrentJar(jar []byte) error {
+func (u *Updater) saveCurrentJar(jar []byte) error {
 	out, err := os.Create("server.jar")
 	if err != nil {
 		return err
@@ -173,7 +173,7 @@ func (vsu *VanillaUpdater) saveCurrentJar(jar []byte) error {
 	return err
 }
 
-func (vsu *VanillaUpdater) saveCurrentHash(hash string) error {
+func (u *Updater) saveCurrentHash(hash string) error {
 	out, err := os.Create("server.hash")
 	if err != nil {
 		return err

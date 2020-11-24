@@ -1,44 +1,43 @@
 package main
 
-import "github.com/sirupsen/logrus"
+import (
+	"strings"
+
+	"github.com/qumine/qumine-server-java/internal/utils"
+	"github.com/sirupsen/logrus"
+)
 
 func init() {
-	//logrus.SetReportCaller(true)
-	// logrus.SetFormatter(&logrus.TextFormatter{
-	// 	DisableColors: true,
-	// 	FullTimestamp: true,
-	// })
+	configureLogLevel()
+	configureLogger()
 }
 
-func setLogLevel(level string) {
-	switch level {
-	case "panic":
+func configureLogLevel() {
+	switch strings.ToUpper(utils.GetEnvString("LOG_LEVEL", "INFO")) {
+	case "PANIC":
 		logrus.SetLevel(logrus.PanicLevel)
-		logrus.Debug("logging set to debug")
 		break
-	case "fatal":
+	case "FATAL":
 		logrus.SetLevel(logrus.FatalLevel)
-		logrus.Debug("logging set to debug")
 		break
-	case "error":
+	case "ERROR":
 		logrus.SetLevel(logrus.ErrorLevel)
-		logrus.Debug("logging set to debug")
 		break
-	case "warn":
+	case "WARN":
 		logrus.SetLevel(logrus.WarnLevel)
-		logrus.Debug("logging set to debug")
 		break
-	case "info":
+	case "INFO":
 		logrus.SetLevel(logrus.InfoLevel)
-		logrus.Debug("logging set to debug")
 		break
-	case "debug":
+	case "DEBUG":
 		logrus.SetLevel(logrus.DebugLevel)
-		logrus.Debug("logging set to debug")
 		break
-	case "trace":
+	case "TRACE":
 		logrus.SetLevel(logrus.TraceLevel)
-		logrus.Debug("logging set to trace")
 		break
 	}
+}
+
+func configureLogger() {
+	// TODO: Configure other logger stuff here
 }

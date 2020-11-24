@@ -5,4 +5,5 @@ EXPOSE 25565
 
 COPY  qumine-server-java qumine-server
 
-ENTRYPOINT [ "./qumine-server" ]
+WORKDIR /qumine/
+ENTRYPOINT [ "/qumine-server" ]
