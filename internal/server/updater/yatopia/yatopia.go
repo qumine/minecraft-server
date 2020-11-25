@@ -136,11 +136,11 @@ func (u *Updater) downloadJar(url string) error {
 }
 
 func (u *Updater) loadCurrentHash() (string, error) {
-	if hash, err := ioutil.ReadFile("server.hash"); err != nil {
+	hash, err := ioutil.ReadFile("server.hash")
+	if err != nil {
 		return "", err
-	} else {
-		return string(hash), nil
 	}
+	return string(hash), nil
 }
 
 func (u *Updater) saveCurrentJar(jar []byte) error {
