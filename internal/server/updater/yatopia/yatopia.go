@@ -151,7 +151,7 @@ func (u *Updater) saveCurrentJar(jar []byte) error {
 }
 
 func (u *Updater) saveCurrentHash(hash string) error {
-	if err := ioutil.WriteFile("server.jar", []byte(hash), 0); err != nil {
+	if err := ioutil.WriteFile("server.hash", []byte(hash), 0); err != nil {
 		return err
 	}
 	return nil

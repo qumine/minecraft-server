@@ -5,19 +5,19 @@ import (
 	"net/http"
 	"sync"
 
-	sw "github.com/qumine/qumine-server-java/internal/server/wrapper"
+	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 )
 
 // API represents the api server
 type API struct {
-	Wrapper *sw.Wrapper
+	Wrapper *wrapper.Wrapper
 
 	httpServer *http.Server
 }
 
 // NewAPI creates a new api instance with the given host and port
-func NewAPI(w *sw.Wrapper) *API {
+func NewAPI(w *wrapper.Wrapper) *API {
 	r := http.NewServeMux()
 
 	api := &API{

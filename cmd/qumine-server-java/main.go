@@ -14,7 +14,7 @@ import (
 	"github.com/qumine/qumine-server-java/internal/server/properties"
 	su "github.com/qumine/qumine-server-java/internal/server/updater"
 	"github.com/qumine/qumine-server-java/internal/server/whitelist"
-	"github.com/qumine/qumine-server-java/internal/server/wrapper"
+	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 )
 
@@ -46,16 +46,16 @@ func main() {
 	updateServer()
 	updatePlugins()
 
-	wrapper := wrapper.NewWrapper()
-	api := api.NewAPI(wrapper)
+	w := wrapper.NewWrapper()
+	a := api.NewAPI(w)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGINT, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
 	wg := &sync.WaitGroup{}
 
-	go wrapper.Start(ctx, wg)
-	go api.Start(ctx, wg)
+	go w.Start(ctx, wg)
+	go a.Start(ctx, wg)
 
 	<-c
 	logrus.Info("interrupt received, stopping")
