@@ -31,8 +31,6 @@ func NewAPI(w *wrapper.Wrapper) *API {
 	r.HandleFunc("/health/live", api.healthLive)
 	r.HandleFunc("/health/ready", api.healthReady)
 
-	r.HandleFunc("/command", api.command)
-
 	return api
 }
 
