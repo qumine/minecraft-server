@@ -1,9 +1,6 @@
 package vanilla
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -150,35 +147,23 @@ func (u *Updater) download(url string) error {
 }
 
 func (u *Updater) loadCurrentHash() (string, error) {
-	file, openErr := os.Open("server.jar")
-	if openErr != nil {
-		return "", openErr
+	if hash, err := ioutil.ReadFile("server.hash"); err != nil {
+		return "", err
+	} else {
+		return string(hash), nil
 	}
-	defer file.Close()
-	hash := sha1.New()
-	if _, copyErr := io.Copy(hash, file); copyErr != nil {
-		return "", copyErr
-	}
-	hashInBytes := hash.Sum(nil)[:20]
-	return hex.EncodeToString(hashInBytes), nil
 }
 
 func (u *Updater) saveCurrentJar(jar []byte) error {
-	out, err := os.Create("server.jar")
-	if err != nil {
+	if err := ioutil.WriteFile("server.jar", jar, 0); err != nil {
 		return err
 	}
-	defer out.Close()
-	_, err = out.Write(jar)
-	return err
+	return nil
 }
 
 func (u *Updater) saveCurrentHash(hash string) error {
-	out, err := os.Create("server.hash")
-	if err != nil {
+	if err := ioutil.WriteFile("server.jar", []byte(hash), 0); err != nil {
 		return err
 	}
-	defer out.Close()
-	_, err = out.WriteString(hash)
-	return err
+	return nil
 }

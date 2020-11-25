@@ -1,9 +1,6 @@
 package yatopia
 
 import (
-	"crypto/sha1"
-	"encoding/hex"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -67,13 +64,16 @@ func (u *Updater) Update() error {
 	}
 
 	logrus.Info("server outdated, updating...")
-	err = u.download(versionDetails.DownloadURL)
+	err = u.downloadJar(versionDetails.DownloadURL)
 	if err != nil {
 		return err
 	}
 
 	logrus.Debug("saving new hash")
-	u.saveCurrentHash(versionDetails.Branch.Commit.Sha)
+	err = u.saveCurrentHash(versionDetails.Branch.Commit.Sha)
+	if err != nil {
+		return err
+	}
 	logrus.Trace("saved new hash")
 
 	logrus.Info("updated server")
@@ -96,6 +96,7 @@ func (u *Updater) isOutdated(versionDetails *VersionDetails) (bool, error) {
 	if err != nil {
 		return true, nil
 	}
+	logrus.WithField("currentHash", currentHash).WithField("newHash", versionDetails.Branch.Commit.Sha).Debug("comparing hashes")
 	if versionDetails.Branch.Commit.Sha != currentHash {
 		return true, nil
 	}
@@ -103,7 +104,7 @@ func (u *Updater) isOutdated(versionDetails *VersionDetails) (bool, error) {
 	return false, nil
 }
 
-func (u *Updater) download(url string) error {
+func (u *Updater) downloadJar(url string) error {
 	logrus.WithField("url", url).Info("downloading jar")
 	rsp, getErr := http.Get(url)
 	if getErr != nil {
@@ -135,35 +136,23 @@ func (u *Updater) download(url string) error {
 }
 
 func (u *Updater) loadCurrentHash() (string, error) {
-	file, openErr := os.Open("server.jar")
-	if openErr != nil {
-		return "", openErr
+	if hash, err := ioutil.ReadFile("server.hash"); err != nil {
+		return "", err
+	} else {
+		return string(hash), nil
 	}
-	defer file.Close()
-	hash := sha1.New()
-	if _, copyErr := io.Copy(hash, file); copyErr != nil {
-		return "", copyErr
-	}
-	hashInBytes := hash.Sum(nil)[:20]
-	return hex.EncodeToString(hashInBytes), nil
 }
 
 func (u *Updater) saveCurrentJar(jar []byte) error {
-	out, err := os.Create("server.jar")
-	if err != nil {
+	if err := ioutil.WriteFile("server.jar", jar, 0); err != nil {
 		return err
 	}
-	defer out.Close()
-	_, err = out.Write(jar)
-	return err
+	return nil
 }
 
 func (u *Updater) saveCurrentHash(hash string) error {
-	out, err := os.Create("server.hash")
-	if err != nil {
+	if err := ioutil.WriteFile("server.jar", []byte(hash), 0); err != nil {
 		return err
 	}
-	defer out.Close()
-	_, err = out.WriteString(hash)
-	return err
+	return nil
 }
