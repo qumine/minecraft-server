@@ -9,6 +9,7 @@ import (
 )
 
 type Wrapper struct {
+	Status  string
 	Console *console.Console
 
 	cmd            *exec.Cmd

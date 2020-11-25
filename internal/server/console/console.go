@@ -13,6 +13,8 @@ type Console struct {
 	stdin  *bufio.Writer
 	stderr *bufio.Reader
 	stdout *bufio.Reader
+
+	subscriber map[string]func(line string)
 }
 
 // NewConsole creates a new console
@@ -21,6 +23,8 @@ func NewConsole(stdin io.Writer, stderr io.Reader, stdout io.Reader) *Console {
 		stdin:  bufio.NewWriter(stdin),
 		stderr: bufio.NewReader(stderr),
 		stdout: bufio.NewReader(stdout),
+
+		subscriber: make(map[string]func(line string)),
 	}
 }
 
@@ -28,9 +32,24 @@ func NewConsole(stdin io.Writer, stderr io.Reader, stdout io.Reader) *Console {
 func (c *Console) Start() {
 	for {
 		if l, err := c.readLine(); err == nil {
+			go func() {
+				for _, s := range c.subscriber {
+					s(l)
+				}
+			}()
 			fmt.Print(l)
 		}
 	}
+}
+
+// Subscribe subscribes to the log stream
+func (c *Console) Subscribe(name string, handler func(line string)) {
+	c.subscriber[name] = handler
+}
+
+// Unsubscribe unsubscribes from the log stream
+func (c *Console) Unsubscribe(name string) {
+	delete(c.subscriber, name)
 }
 
 // SendCommand sends a command to the minecraft server
