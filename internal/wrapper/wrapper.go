@@ -8,6 +8,7 @@ import (
 	"github.com/qumine/qumine-server-java/internal/server/console"
 )
 
+// Wrapper represents the wrapper object of the minecraft server
 type Wrapper struct {
 	Status  string
 	Console *console.Console
@@ -16,6 +17,7 @@ type Wrapper struct {
 	cmdStopTimeout time.Duration
 }
 
+// NewWrapper creates a new wrapper
 func NewWrapper() *Wrapper {
 	cmd := exec.Command("java", "-jar", "server.jar", "nogui")
 	cmd.SysProcAttr = &syscall.SysProcAttr{

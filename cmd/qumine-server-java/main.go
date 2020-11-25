@@ -97,7 +97,7 @@ func main() {
 		EnableBashCompletion: true,
 		Compiled:             compiled,
 		Authors: []*cli.Author{
-			&cli.Author{
+			{
 				Name:  "Cedric Lewe",
 				Email: "cedric@qumine.io",
 			},

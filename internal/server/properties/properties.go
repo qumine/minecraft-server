@@ -39,7 +39,4 @@ func Configure() {
 		logrus.WithError(err).Error("Failed to write server.properties")
 	}
 	logrus.WithField("bytesWritte", w).Debug("written server.properties")
-
-	p = nil
-	f = nil
 }

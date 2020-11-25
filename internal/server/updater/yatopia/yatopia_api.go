@@ -8,29 +8,29 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type VersionDetails struct {
-	Branch struct {
-		Name   string `json:"name"`
-		Commit struct {
-			Sha        string `json:"sha"`
-			AuthoredAt string `json:"authoredAt"`
-			Message    string `json:"message"`
-			Comment    string `json:"comment"`
+type versionDetails struct {
+	branch struct {
+		name   string `json:"name"`
+		commit struct {
+			sha        string `json:"sha"`
+			authoredAt string `json:"authoredAt"`
+			message    string `json:"message"`
+			comment    string `json:"comment"`
 		} `json:"commit"`
 	} `json:"branch"`
-	ChangeSets []struct {
-		Sha        string `json:"sha"`
-		AuthoredAt string `json:"authoredAt"`
-		Message    string `json:"message"`
-		Comment    string `json:"comment"`
+	changeSets []struct {
+		sha        string `json:"sha"`
+		authoredAt string `json:"authoredAt"`
+		message    string `json:"message"`
+		comment    string `json:"comment"`
 	} `json:"changeSets"`
-	Number         int    `json:"number"`
-	JenkinsViewURL string `json:"jenkinsViewUrl"`
-	Status         string `json:"status"`
-	DownloadURL    string `json:"downloadUrl"`
+	number         int    `json:"number"`
+	jenkinsViewURL string `json:"jenkinsViewUrl"`
+	status         string `json:"status"`
+	downloadURL    string `json:"downloadUrl"`
 }
 
-func getVersionDetails(versionDetailsURL string) (*VersionDetails, error) {
+func getVersionDetails(versionDetailsURL string) (*versionDetails, error) {
 	logrus.WithField("url", versionDetailsURL).Debug("downloading versionDetails")
 	rsp, getErr := http.Get(versionDetailsURL)
 	if getErr != nil {
@@ -51,8 +51,8 @@ func getVersionDetails(versionDetailsURL string) (*VersionDetails, error) {
 	logrus.WithField("body", rsp.Body).Trace("read versionDetails")
 
 	logrus.Debug("unmarshalling versionDetails")
-	versionDetails := &VersionDetails{}
-	jsonErr := json.Unmarshal(body, &versionDetails)
+	versionDetails := &versionDetails{}
+	jsonErr := json.Unmarshal(body, versionDetails)
 	if jsonErr != nil {
 		logrus.WithError(jsonErr).Error("unmarshalling versionDetails failed")
 		return nil, jsonErr
