@@ -10,9 +10,11 @@ import (
 	"syscall"
 
 	"github.com/qumine/qumine-server-java/internal/api"
-	sp "github.com/qumine/qumine-server-java/internal/server/properties"
+	"github.com/qumine/qumine-server-java/internal/server/operators"
+	"github.com/qumine/qumine-server-java/internal/server/properties"
 	su "github.com/qumine/qumine-server-java/internal/server/updater"
-	sw "github.com/qumine/qumine-server-java/internal/server/wrapper"
+	"github.com/qumine/qumine-server-java/internal/server/whitelist"
+	"github.com/qumine/qumine-server-java/internal/server/wrapper"
 	"github.com/sirupsen/logrus"
 )
 
@@ -37,14 +39,14 @@ func init() {
 }
 
 func main() {
-	sp.Configure()
-	configureWhitelist()
-	configureOperators()
+	properties.Configure()
+	whitelist.Configure()
+	operators.Configure()
 
 	updateServer()
 	updatePlugins()
 
-	wrapper := sw.NewWrapper()
+	wrapper := wrapper.NewWrapper()
 	api := api.NewAPI(wrapper)
 
 	c := make(chan os.Signal, 1)
@@ -71,18 +73,6 @@ func showUsage() {
 func showVersion() {
 	fmt.Printf("%v, commit %v, built at %v", version, commit, date)
 	os.Exit(0)
-}
-
-func configureServerProperties() {
-	// TODO: Configure the server.properties
-}
-
-func configureWhitelist() {
-	// TODO: Configure the whitelist.json
-}
-
-func configureOperators() {
-	// TODO: Configure ops.json
 }
 
 func updateServer() {
