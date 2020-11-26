@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// VersionManifest represents the version manifest of the mojang api
 type VersionManifest struct {
 	Latest struct {
 		Release  string `json:"release"`
@@ -23,6 +24,7 @@ type VersionManifest struct {
 	} `json:"versions"`
 }
 
+// VersionDetails represents the version details of the mojang api
 type VersionDetails struct {
 	Arguments struct {
 		Game []interface{} `json:"game"`

@@ -23,28 +23,14 @@ var (
 func main() {
 	compiled, _ := time.Parse("yyyy-mm-ddThh:mm:ssZ", date)
 	app := &cli.App{
-		Name:     "QuMine Server",
-		HelpName: "./qumine-server",
-		Usage:    "Minecraft-Server wrapper",
-
+		Name:        "QuMine Server",
+		HelpName:    "./qumine-server",
+		Usage:       "Minecraft-Server wrapper",
 		Version:     version,
 		Description: "QuMine Server is a simple wrapper for minecraft servers that handles basic stuff",
 		Commands: []*cli.Command{
-			{
-				Name:    "server",
-				Aliases: []string{"s"},
-				Usage:   "Start the QuMine Server",
-				Action:  Server,
-			},
-			{
-				Name:    "client",
-				Aliases: []string{"c"},
-				Usage:   "Start the QuMine Server Client",
-				Action: func(c *cli.Context) error {
-					logrus.Warn("Client mode not yet supported")
-					return nil
-				},
-			},
+			ServerCommand,
+			ClientCommand,
 		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{

@@ -17,32 +17,38 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func Server(c *cli.Context) error {
-	properties.Configure()
-	whitelist.Configure()
-	operators.Configure()
+// ServerCommand is the subcommand for running in server mode
+var ServerCommand = &cli.Command{
+	Name:    "server",
+	Aliases: []string{"s"},
+	Usage:   "Start the QuMine Server",
+	Action: func(c *cli.Context) error {
+		properties.Configure()
+		whitelist.Configure()
+		operators.Configure()
 
-	updateServer()
-	updatePlugins()
+		updateServer()
+		updatePlugins()
 
-	w := wrapper.NewWrapper()
-	a := api.NewAPI(w)
+		w := wrapper.NewWrapper()
+		a := api.NewAPI(w)
 
-	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
-	ctx, cancel := context.WithCancel(context.Background())
-	wg := &sync.WaitGroup{}
+		interrupt := make(chan os.Signal, 1)
+		signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
+		ctx, cancel := context.WithCancel(context.Background())
+		wg := &sync.WaitGroup{}
 
-	go w.Start(ctx, wg)
-	go a.Start(ctx, wg)
+		go w.Start(ctx, wg)
+		go a.Start(ctx, wg)
 
-	<-interrupt
-	logrus.Info("interrupt received, stopping")
+		<-interrupt
+		logrus.Info("interrupt received, stopping")
 
-	cancel()
-	wg.Wait()
-	logrus.Info("stopped")
-	return nil
+		cancel()
+		wg.Wait()
+		logrus.Info("stopped")
+		return nil
+	},
 }
 
 func updateServer() {
