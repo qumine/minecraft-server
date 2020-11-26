@@ -64,13 +64,13 @@ func (u *Updater) Update() error {
 	}
 
 	logrus.Info("server outdated, updating...")
-	err = u.downloadJar(versionDetails.downloadURL)
+	err = u.downloadJar(versionDetails.DownloadURL)
 	if err != nil {
 		return err
 	}
 
 	logrus.Debug("saving new hash")
-	err = u.saveCurrentHash(versionDetails.branch.commit.sha)
+	err = u.saveCurrentHash(versionDetails.Branch.Commit.Sha)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (u *Updater) Update() error {
 	return nil
 }
 
-func (u *Updater) isOutdated(versionDetails *versionDetails) (bool, error) {
+func (u *Updater) isOutdated(versionDetails *VersionDetails) (bool, error) {
 	if u.serverForceUpdate {
 		return true, nil
 	}
@@ -96,8 +96,8 @@ func (u *Updater) isOutdated(versionDetails *versionDetails) (bool, error) {
 	if err != nil {
 		return true, nil
 	}
-	logrus.WithField("currentHash", currentHash).WithField("newHash", versionDetails.branch.commit.sha).Debug("comparing hashes")
-	if versionDetails.branch.commit.sha != currentHash {
+	logrus.WithField("currentHash", currentHash).WithField("newHash", versionDetails.Branch.Commit.Sha).Debug("comparing hashes")
+	if versionDetails.Branch.Commit.Sha != currentHash {
 		return true, nil
 	}
 

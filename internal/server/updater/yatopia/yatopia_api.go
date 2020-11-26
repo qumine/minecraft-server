@@ -8,29 +8,45 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type versionDetails struct {
-	branch struct {
-		name   string `json:"name"`
-		commit struct {
-			sha        string `json:"sha"`
-			authoredAt string `json:"authoredAt"`
-			message    string `json:"message"`
-			comment    string `json:"comment"`
+// VersionDetails represents the version details of the yatopia api
+type VersionDetails struct {
+	// Branch represents the branch of the version details
+	Branch struct {
+		// Name is the name of the branch
+		Name string `json:"name"`
+		// Commit is the latest commit of the branch
+		Commit struct {
+			// Sha is the commit hash of the commit
+			Sha string `json:"sha"`
+			// AuthoredAt is the commit date of the commit
+			AuthoredAt string `json:"authoredAt"`
+			// Message is the commit message of the commit
+			Message string `json:"message"`
+			// Comment is the comment of the commit
+			Comment string `json:"comment"`
 		} `json:"commit"`
 	} `json:"branch"`
-	changeSets []struct {
-		sha        string `json:"sha"`
-		authoredAt string `json:"authoredAt"`
-		message    string `json:"message"`
-		comment    string `json:"comment"`
+	ChangeSets []struct {
+		// Sha is the commit hash of the commit
+		Sha string `json:"sha"`
+		// AuthoredAt is the commit date of the commit
+		AuthoredAt string `json:"authoredAt"`
+		// Message is the commit message of the commit
+		Message string `json:"message"`
+		// Comment is the comment of the commit
+		Comment string `json:"comment"`
 	} `json:"changeSets"`
-	number         int    `json:"number"`
-	jenkinsViewURL string `json:"jenkinsViewUrl"`
-	status         string `json:"status"`
-	downloadURL    string `json:"downloadUrl"`
+	// Number is the number of the build
+	Number int `json:"number"`
+	// JenkinsViewURL is the URL to the jenkins view of the build
+	JenkinsViewURL string `json:"jenkinsViewUrl"`
+	// Status is the build status
+	Status string `json:"status"`
+	// DownloadURL is the URL of the jar
+	DownloadURL string `json:"downloadUrl"`
 }
 
-func getVersionDetails(versionDetailsURL string) (*versionDetails, error) {
+func getVersionDetails(versionDetailsURL string) (*VersionDetails, error) {
 	logrus.WithField("url", versionDetailsURL).Debug("downloading versionDetails")
 	rsp, getErr := http.Get(versionDetailsURL)
 	if getErr != nil {
@@ -51,8 +67,8 @@ func getVersionDetails(versionDetailsURL string) (*versionDetails, error) {
 	logrus.WithField("body", rsp.Body).Trace("read versionDetails")
 
 	logrus.Debug("unmarshalling versionDetails")
-	versionDetails := &versionDetails{}
-	jsonErr := json.Unmarshal(body, versionDetails)
+	versionDetails := &VersionDetails{}
+	jsonErr := json.Unmarshal(body, &versionDetails)
 	if jsonErr != nil {
 		logrus.WithError(jsonErr).Error("unmarshalling versionDetails failed")
 		return nil, jsonErr
