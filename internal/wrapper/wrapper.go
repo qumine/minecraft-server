@@ -15,6 +15,7 @@ type Wrapper struct {
 
 	cmd            *exec.Cmd
 	cmdStopTimeout time.Duration
+	cmdKeepRunning bool
 }
 
 // NewWrapper creates a new wrapper

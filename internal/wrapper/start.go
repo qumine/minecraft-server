@@ -6,6 +6,7 @@ import (
 	"os"
 	"regexp"
 	"sync"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -14,6 +15,7 @@ var logToStatus = map[string]*regexp.Regexp{
 	"Starting": regexp.MustCompile(`Starting minecraft server version (.*)`),
 	"Started":  regexp.MustCompile(`Done (?s)(.*)! For help, type "help"`),
 	"Stopping": regexp.MustCompile(`Stopping (.*) server`),
+	// Closing Server
 }
 
 // Start starts the wrapper and the minecraft server.
@@ -28,11 +30,24 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 		if err := w.cmd.Start(); err != nil {
 			logrus.WithError(err).Fatal("starting wrapper failed")
 		}
+		w.cmdKeepRunning = true
 	}()
 	go func() {
 		w.Console.Subscribe("wrapper", w.handleLog)
 		w.Console.Start()
 	}()
+	go func() {
+		for {
+			if w.cmdKeepRunning {
+				err := w.cmd.Wait()
+				if err != nil {
+					logrus.WithError(err).Fatal("java process stopped unexpectedly")
+				}
+			}
+			time.Sleep(time.Second)
+		}
+	}()
+	logrus.Info("started wrapper")
 
 	for {
 		select {

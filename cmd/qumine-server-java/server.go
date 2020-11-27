@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/qumine/qumine-server-java/internal/api"
+	"github.com/qumine/qumine-server-java/internal/grpc/server"
 	"github.com/qumine/qumine-server-java/internal/server/operators"
 	"github.com/qumine/qumine-server-java/internal/server/properties"
 	su "github.com/qumine/qumine-server-java/internal/server/updater"
@@ -32,6 +33,7 @@ var ServerCommand = &cli.Command{
 
 		w := wrapper.NewWrapper()
 		a := api.NewAPI(w)
+		s := server.NewServer(w)
 
 		interrupt := make(chan os.Signal, 1)
 		signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -40,6 +42,7 @@ var ServerCommand = &cli.Command{
 
 		go w.Start(ctx, wg)
 		go a.Start(ctx, wg)
+		go s.Start(ctx, wg)
 
 		<-interrupt
 		logrus.Info("interrupt received, stopping")

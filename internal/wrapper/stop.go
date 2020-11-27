@@ -12,6 +12,7 @@ import (
 // Stop stops the wrapper by first trying to gravefully shutdown the minecraft server.
 func (w *Wrapper) Stop(wg *sync.WaitGroup) {
 	logrus.WithField("timeout", w.cmdStopTimeout).Info("stopping wrapper")
+	w.cmdKeepRunning = false
 
 	ctx, cancel := context.WithTimeout(context.Background(), w.cmdStopTimeout)
 	go func() {

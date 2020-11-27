@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package grpc;
+
+service QuMineServer {
+  rpc StreamLogs(LogStreamRequest) returns (stream LogStreamResponse);
+  rpc SendCommand(SendCommandRequest) returns (stream SendCommandResponse);
+}
+
+message LogStreamRequest {
+  int32 lines = 1;
+}
+
+message LogStreamResponse {
+  string line = 1;
+}
+
+message SendCommandRequest {
+  string line = 1;
+}
+
+message SendCommandResponse {
+}
