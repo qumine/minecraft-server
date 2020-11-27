@@ -30,7 +30,7 @@ func main() {
 		Description: "QuMine Server is a simple wrapper for minecraft servers that handles basic stuff",
 		Commands: []*cli.Command{
 			ServerCommand,
-			ClientCommand,
+			ConsoleCommand,
 		},
 		Flags: []cli.Flag{
 			&cli.BoolFlag{

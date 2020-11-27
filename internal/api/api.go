@@ -2,9 +2,11 @@ package api
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"sync"
 
+	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 )
@@ -16,7 +18,7 @@ type API struct {
 	httpServer *http.Server
 }
 
-// NewAPI creates a new api instance with the given host and port
+// NewAPI creates a new api instance
 func NewAPI(w *wrapper.Wrapper) *API {
 	r := http.NewServeMux()
 
@@ -24,7 +26,7 @@ func NewAPI(w *wrapper.Wrapper) *API {
 		Wrapper: w,
 
 		httpServer: &http.Server{
-			Addr:    "0.0.0.0:8080",
+			Addr:    net.JoinHostPort(utils.GetEnvString("HTTP_ADDR", "0.0.0.0"), utils.GetEnvString("HTTP_PORT", "8080")),
 			Handler: r,
 		},
 	}

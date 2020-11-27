@@ -15,12 +15,20 @@ Docker Image for running minecraft servers.
 - [X] Basic API health endpoints.
 - [ ] Basic download of server plugins.
 - [ ] Basic updating of server plugins.
-- [ ] GRPC API for controlling the server remotely(start, stop, ).
-- [ ] GRPC API for log streaming.
-- [ ] GRPC API for console streaming(in, out).
+- [X] GRPC API for controlling the server remotely(start, stop, ).
+- [X] GRPC API for log streaming.
+- [X] GRPC API for console streaming(in, out).
 - [ ] Cryo, stop server if no client is connected.
 
 # Usage
+
+## Configuration
+
+Configuration is done via environment variables.
+
+## Accessing the server console
+
+You can access the server console by executing ```/qumine-server console``` inside of the container. This will stream logs and allow you to send commands to the server.
 
 ## Kubernetes
 
