@@ -67,6 +67,7 @@ func (s *GRPCServer) Stop(wg *sync.WaitGroup) {
 	wg.Done()
 }
 
+// StreamLogs streams the logs of the minecraft server to the grpc client
 func (s *GRPCServer) StreamLogs(req *qugrpc.LogStreamRequest, srv qugrpc.QuMineServer_StreamLogsServer) error {
 	s.Wrapper.Console.Subscribe("client", func(line string) {
 		srv.Send(&qugrpc.LogStreamResponse{
@@ -82,6 +83,7 @@ func (s *GRPCServer) StreamLogs(req *qugrpc.LogStreamRequest, srv qugrpc.QuMineS
 	}
 }
 
+// SendCommand sends a command to the minecraft server
 func (s *GRPCServer) SendCommand(req *qugrpc.SendCommandRequest, srv qugrpc.QuMineServer_SendCommandServer) error {
 	if err := s.Wrapper.Console.SendCommand(req.Line); err != nil {
 		srv.Send(&qugrpc.SendCommandResponse{})
