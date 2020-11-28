@@ -2,11 +2,12 @@ package server
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
+	"github.com/qumine/qumine-server-java/internal/server/updater/custom"
 	"github.com/qumine/qumine-server-java/internal/server/updater/vanilla"
 	"github.com/qumine/qumine-server-java/internal/server/updater/yatopia"
-	"github.com/qumine/qumine-server-java/internal/utils"
 )
 
 const (
@@ -21,12 +22,14 @@ type Updater interface {
 
 // NewUpdater creates a new updater for the provided serverType.
 func NewUpdater() (Updater, error) {
-	switch strings.ToUpper(utils.GetEnvString("SERVER_TYPE", "VANILLA")) {
+	switch strings.ToUpper(os.Getenv("SERVER_TYPE")) {
+	case "CUSTOM":
+		return custom.NewCustomUpdater(), nil
 	case "VANILLA":
 		return vanilla.NewVanillaUpdater(), nil
 	case "YATOPIA":
 		return yatopia.NewYatopiaUpdater(), nil
 	default:
-		return nil, fmt.Errorf("serverType(%s) not supported", strings.ToUpper(utils.GetEnvString("SERVER_TYPE", "VANILLA")))
+		return nil, fmt.Errorf("serverType(%s) not supported", strings.ToUpper(os.Getenv("SERVER_TYPE")))
 	}
 }
