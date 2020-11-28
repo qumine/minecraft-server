@@ -27,7 +27,7 @@ func Configure() {
 	logrus.Info("whitelist.json does not exist, configuring it now")
 
 	var whitelist []User
-	for _, n := range strings.Split(utils.GetEnvString("WHITELIST", ""), ",") {
+	for _, n := range strings.Split(utils.GetEnvString("SERVER_WHITE_LIST", ""), ",") {
 		whitelist = append(whitelist, User{
 			Name: n,
 		})

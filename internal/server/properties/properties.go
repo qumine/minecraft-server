@@ -22,8 +22,8 @@ func Configure() {
 	p := pp.Map()
 	for _, element := range os.Environ() {
 		variable := strings.Split(element, "=")
-		if strings.HasPrefix(variable[0], "PROPERTIES_") {
-			variable[0] = strings.ReplaceAll(variable[0], "PROPERTIES_", "")
+		if strings.HasPrefix(variable[0], "SERVER_PROPERTIES_") {
+			variable[0] = strings.ReplaceAll(variable[0], "SERVER_PROPERTIES_", "")
 			variable[0] = strings.ReplaceAll(variable[0], "_", "-")
 			variable[0] = strings.ToLower(variable[0])
 			p[variable[0]] = variable[1]

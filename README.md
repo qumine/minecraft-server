@@ -22,9 +22,44 @@ Docker Image for running minecraft servers.
 
 # Usage
 
+## Quick Start
+
+```
+docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA qumine/qumine-server-java:latest
+```
+
 ## Configuration
 
-Configuration is done via environment variables.
+### server.properties
+
+Server properties can be set via the encironment variables prefixed with ```SERVER_PROPERTIES_*```.
+
+For example to confiugre the max-players property you would set the environemt like this:
+```
+SERVER_PROPERTIES_MAX_PLAYERS=10
+```
+
+### whitelist.json
+
+***whitelist.json will only be populated on the first start***
+
+If the whitelist is turned on via ```SERVER_PROPERTIES_WHITE_LIST=true``` you can add initial players to the whitelist via the ```SERVER_WHITE_LIST``` environment variable.
+
+For example to add the users ```Notch``` and ```Herobrine``` to the initial whitelist you would set:
+```
+SERVER_WHITE_LIST=Notch,Herobrine
+```
+
+### ops.json
+
+***ops.json will only be populated on the first start***
+
+You can add initial players to the operators via the ```SERVER_OPS``` environment variable.
+
+For example to add the users ```Notch``` and ```Herobrine``` to the initial operators you would set:
+```
+SERVER_OPS=Notch,Herobrine
+```
 
 ## Accessing the server console
 
