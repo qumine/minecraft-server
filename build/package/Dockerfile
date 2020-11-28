@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8:ubi-minimal-jre
+FROM adoptopenjdk/openjdk11:ubi-minimal-jre
 
 EXPOSE 80
 EXPOSE 25565
@@ -6,4 +6,4 @@ EXPOSE 25565
 COPY  qumine-server-java qumine-server
 
 WORKDIR /qumine/
-ENTRYPOINT [ "/qumine-server"]
+ENTRYPOINT [ "/qumine-server", "server"]
