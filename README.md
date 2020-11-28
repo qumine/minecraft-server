@@ -28,9 +28,13 @@ Docker Image for running minecraft servers.
 docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA qumine/qumine-server-java:latest
 ```
 
-## Configuration
+## Accessing the server console
 
-### server.properties
+You can access the server console by executing ```/qumine-server console``` inside of the container. This will stream logs and allow you to send commands to the server.
+
+# Configuration
+
+## server.properties
 
 Server properties can be set via the encironment variables prefixed with ```SERVER_PROPERTIES_*```.
 
@@ -39,7 +43,7 @@ For example to confiugre the max-players property you would set the environemt l
 SERVER_PROPERTIES_MAX_PLAYERS=10
 ```
 
-### whitelist.json
+## whitelist.json
 
 ***whitelist.json will only be populated on the first start***
 
@@ -50,7 +54,7 @@ For example to add the users ```Notch``` and ```Herobrine``` to the initial whit
 SERVER_WHITE_LIST=Notch,Herobrine
 ```
 
-### ops.json
+## ops.json
 
 ***ops.json will only be populated on the first start***
 
@@ -61,11 +65,57 @@ For example to add the users ```Notch``` and ```Herobrine``` to the initial oper
 SERVER_OPS=Notch,Herobrine
 ```
 
-## Accessing the server console
+## Server Types
 
-You can access the server console by executing ```/qumine-server console``` inside of the container. This will stream logs and allow you to send commands to the server.
+### Vanilla
+
+```
+TODO
+```
+
+### PaperMC
+
+```
+W.I.P
+```
+
+### Yatopia
+
+```
+TODO
+```
+
+### Custom
+
+```
+TODO
+```
+
+## Plugins
+
+```
+W.I.P
+```
+
+# Deployment
+
+```
+TODO
+```
+
+## Docker
+
+```
+TODO
+```
 
 ## Kubernetes
+
+```
+TODO
+```
+
+## Helm
 
 *HELM Charts can be found here: [qumine/charts](https://github.com/qumine/charts)*
 
