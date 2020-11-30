@@ -70,7 +70,7 @@ SERVER_OPS=Notch,Herobrine
 ### Vanilla
 
 ```
-TODO
+docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/qumine-server-java:latest
 ```
 
 ### PaperMC
@@ -82,13 +82,13 @@ W.I.P
 ### Yatopia
 
 ```
-TODO
+docker run -it --rm -p 25565:25565 -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/qumine-server-java:latest
 ```
 
 ### Custom
 
 ```
-TODO
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download qumine/qumine-server-java:latest
 ```
 
 ## Plugins
