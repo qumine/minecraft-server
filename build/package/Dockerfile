@@ -1,10 +1,11 @@
-FROM adoptopenjdk/openjdk11:ubi-minimal-jre
+FROM adoptopenjdk/openjdk11:alpine-jre
 
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 19132
 EXPOSE 25565
 
 COPY  qumine-server-java /usr/local/bin/qumine-server
 RUN chmod +x /usr/local/bin/qumine-server
 
-WORKDIR /qumine/
+WORKDIR /data/
 ENTRYPOINT [ "qumine-server", "server"]
