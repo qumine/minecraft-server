@@ -12,7 +12,7 @@ import (
 const (
 	serverVersion     = "latest"
 	serverForceUpdate = false
-	serverYatopiaAPI  = "https://api.yatopia.net/v2/latestBuild"
+	serverYatopiaAPI  = "https://api.yatopiamc.org/v2/latestBuild"
 )
 
 // Updater is the updater for yatopia servers.
