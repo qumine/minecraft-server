@@ -1,9 +1,9 @@
 package main
 
 import (
-	"github.com/jroimartin/gocui"
+	tcell "github.com/gdamore/tcell/v2"
 	"github.com/qumine/qumine-server-java/internal/grpc/client"
-	"github.com/sirupsen/logrus"
+	"github.com/rivo/tview"
 	"github.com/urfave/cli/v2"
 )
 
@@ -15,44 +15,40 @@ var ConsoleCommand = &cli.Command{
 	Action: func(c *cli.Context) error {
 		client := client.NewClient()
 
-		g, err := gocui.NewGui(gocui.OutputNormal)
-		if err != nil {
-			logrus.WithError(err).Fatal("Failed to create ui")
-		}
-		defer g.Close()
+		cout := newConsoleOutput()
+		cin := newConsoleInput(client)
+		app := tview.NewApplication()
+		app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+			if event.Key() == tcell.KeyCtrlC {
+				client.Stop(app, cout)
+			}
+			return event
+		})
+		app.SetRoot(tview.NewFlex().
+			SetDirection(tview.FlexRow).
+			AddItem(cout, 0, 1, false).
+			AddItem(cin, 1, 1, true), true)
 
-		g.SetManagerFunc(layout)
-		g.SetKeybinding("console", gocui.KeyEnter, gocui.ModNone, client.Send)
-		g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, client.Stop)
-		go client.Start(g)
-		g.MainLoop()
-		return nil
+		go client.Start(app, cout)
+		return app.Run()
 	},
 }
 
-func layout(g *gocui.Gui) error {
-	maxX, maxY := g.Size()
-	g.Cursor = true
+func newLayout() *tview.Flex {
+	return tview.NewFlex()
+}
 
-	if messages, err := g.SetView("logs", -1, -1, maxX+1, maxY); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		g.SetViewOnTop("logs")
-		messages.Autoscroll = true
-		messages.Frame = false
-		messages.Wrap = true
-	}
+func newConsoleOutput() *tview.TextView {
+	return tview.NewTextView()
+}
 
-	if input, err := g.SetView("console", -1, maxY-2, maxX+1, maxY); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		g.SetCurrentView("console")
-		input.Autoscroll = false
-		input.Editable = true
-		input.Frame = false
-		input.Wrap = true
-	}
-	return nil
+func newConsoleInput(client *client.GRPCClient) *tview.InputField {
+	in := tview.NewInputField()
+	return in.
+		SetDoneFunc(func(key tcell.Key) {
+			client.Send(in.GetText())
+			in.SetText("")
+		}).
+		SetFieldBackgroundColor(tcell.ColorDefault).
+		SetPlaceholder("Enter command here...")
 }

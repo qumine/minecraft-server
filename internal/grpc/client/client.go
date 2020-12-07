@@ -6,9 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/jroimartin/gocui"
 	qugrpc "github.com/qumine/qumine-server-java/internal/grpc"
 	"github.com/qumine/qumine-server-java/internal/utils"
+	"github.com/rivo/tview"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
@@ -31,10 +31,9 @@ func NewClient() *GRPCClient {
 }
 
 // Start the GRPCServer
-func (c *GRPCClient) Start(g *gocui.Gui) error {
+func (c *GRPCClient) Start(app *tview.Application, out *tview.TextView) error {
 	var err error
 	time.Sleep(2 * time.Second)
-	logs, err := g.View("logs")
 	if err != nil {
 		logrus.WithError(err).Fatal("starting grpc client failed")
 	}
@@ -42,84 +41,49 @@ func (c *GRPCClient) Start(g *gocui.Gui) error {
 		c.ctx, c.cancel = context.WithCancel(context.Background())
 		c.conn, err = grpc.Dial(c.Addr, grpc.WithInsecure())
 		if err != nil {
-			g.Update(func(g *gocui.Gui) error {
-				fmt.Fprintln(logs, "failed to start grpc client")
-				return nil
-			})
+			fmt.Fprintln(out, "failed to start grpc client")
+			app.Draw()
+			return
 		}
 		c.client = qugrpc.NewQuMineServerClient(c.conn)
 		stream, err := c.client.StreamLogs(c.ctx, &qugrpc.LogStreamRequest{Lines: -1})
 		if err != nil {
-			g.Update(func(g *gocui.Gui) error {
-				fmt.Fprintln(logs, "failed to stream logs")
-				return nil
-			})
+			fmt.Fprintln(out, "failed to stream logs")
+			app.Draw()
 			return
 		}
 
 		for {
 			var rsp qugrpc.LogStreamResponse
 			if err = stream.RecvMsg(&rsp); err != nil {
-				g.Update(func(g *gocui.Gui) error {
-					fmt.Fprintln(logs, "stream closed")
-					return nil
-				})
+				fmt.Fprintln(out, "stream closed")
+				app.Draw()
 				return
 			}
-			g.Update(func(g *gocui.Gui) error {
-				fmt.Fprint(logs, rsp.Line)
-				return nil
-			})
+			out.Write([]byte(rsp.Line))
+			out.ScrollToEnd()
+			app.Draw()
 		}
 	}()
 	return nil
 }
 
 // Stop the grpc client
-func (c *GRPCClient) Stop(g *gocui.Gui, v *gocui.View) error {
-	logs, err := g.View("logs")
-	if err != nil {
-		logrus.WithError(err).Fatal("starting grpc client failed")
+func (c *GRPCClient) Stop(app *tview.Application, out *tview.TextView) error {
+	fmt.Fprintln(out, "CONSOLE: stopping grpc client")
+	app.Draw()
+	c.cancel()
+	if err := c.conn.Close(); err != nil {
+		return err
 	}
 
-	g.Update(func(g *gocui.Gui) error {
-		fmt.Fprintln(logs, "stopping grpc client")
-		return nil
-	})
-	c.cancel()
-	c.conn.Close()
-	g.Update(func(g *gocui.Gui) error {
-		fmt.Fprintln(logs, "stopped grpc client")
-		return nil
-	})
-	return gocui.ErrQuit
-}
-
-// Send sends the command to the server
-func (c *GRPCClient) Send(g *gocui.Gui, v *gocui.View) error {
-	c.client.SendCommand(c.ctx, &qugrpc.SendCommandRequest{Line: v.Buffer()})
-	g.Update(func(g *gocui.Gui) error {
-		v.Clear()
-		v.SetCursor(0, 0)
-		v.SetOrigin(0, 0)
-		return nil
-	})
+	fmt.Fprintln(out, "CONSOLE: stopping grpc client")
+	app.Draw()
 	return nil
 }
 
-func (c *GRPCClient) streamLogs(ctx context.Context, client qugrpc.QuMineServerClient, lines int32) {
-	stream, err := client.StreamLogs(ctx, &qugrpc.LogStreamRequest{Lines: lines})
-	if err != nil {
-		logrus.WithError(err).Fatal("streaming logs failed")
-		return
-	}
-
-	for {
-		var rsp qugrpc.LogStreamResponse
-		if err = stream.RecvMsg(&rsp); err != nil {
-			logrus.WithError(err).Fatal("stream closed")
-			return
-		}
-		fmt.Print(rsp.Line)
-	}
+// Send sends the command to the server
+func (c *GRPCClient) Send(line string) error {
+	c.client.SendCommand(c.ctx, &qugrpc.SendCommandRequest{Line: line})
+	return nil
 }
