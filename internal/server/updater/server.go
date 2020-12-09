@@ -1,4 +1,4 @@
-package server
+package travertine
 
 import (
 	"fmt"
@@ -7,6 +7,7 @@ import (
 
 	"github.com/qumine/qumine-server-java/internal/server/updater/custom"
 	"github.com/qumine/qumine-server-java/internal/server/updater/papermc"
+	"github.com/qumine/qumine-server-java/internal/server/updater/travertine"
 	"github.com/qumine/qumine-server-java/internal/server/updater/vanilla"
 	"github.com/qumine/qumine-server-java/internal/server/updater/waterfall"
 	"github.com/qumine/qumine-server-java/internal/server/updater/yatopia"
@@ -31,10 +32,12 @@ func NewUpdater() (Updater, error) {
 		return vanilla.NewVanillaUpdater(), nil
 	case "PAPERMC":
 		return papermc.NewPaperMCUpdater(), nil
-	case "YATOPIA":
-		return yatopia.NewYatopiaUpdater(), nil
+	case "TRAVERTINE":
+		return travertine.NewTravertineUpdater(), nil
 	case "WATERFALL":
 		return waterfall.NewWaterfallUpdater(), nil
+	case "YATOPIA":
+		return yatopia.NewYatopiaUpdater(), nil
 	default:
 		return nil, fmt.Errorf("serverType(%s) not supported", strings.ToUpper(os.Getenv("SERVER_TYPE")))
 	}
