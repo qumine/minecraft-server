@@ -8,6 +8,7 @@ import (
 	"github.com/qumine/qumine-server-java/internal/server/updater/custom"
 	"github.com/qumine/qumine-server-java/internal/server/updater/papermc"
 	"github.com/qumine/qumine-server-java/internal/server/updater/vanilla"
+	"github.com/qumine/qumine-server-java/internal/server/updater/waterfall"
 	"github.com/qumine/qumine-server-java/internal/server/updater/yatopia"
 )
 
@@ -32,6 +33,8 @@ func NewUpdater() (Updater, error) {
 		return papermc.NewPaperMCUpdater(), nil
 	case "YATOPIA":
 		return yatopia.NewYatopiaUpdater(), nil
+	case "WATERFALL":
+		return waterfall.NewWaterfallUpdater(), nil
 	default:
 		return nil, fmt.Errorf("serverType(%s) not supported", strings.ToUpper(os.Getenv("SERVER_TYPE")))
 	}
