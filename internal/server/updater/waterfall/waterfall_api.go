@@ -9,7 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// VersionManifest represents the version manifest of the papermc api
+// VersionManifest represents the version manifest of the waterfall api
 type VersionManifest struct {
 	ProjectID     string   `json:"project_id"`
 	ProjectName   string   `json:"project_name"`
@@ -17,7 +17,7 @@ type VersionManifest struct {
 	Versions      []string `json:"versions"`
 }
 
-// VersionGroupDetails represents the versiongroup details of the papermc api
+// VersionGroupDetails represents the versiongroup details of the waterfall api
 type VersionGroupDetails struct {
 	ProjectID    string   `json:"project_id"`
 	ProjectName  string   `json:"project_name"`
@@ -40,7 +40,7 @@ type VersionGroupDetails struct {
 	} `json:"builds"`
 }
 
-// VersionDetails represents the version details of the papermc api
+// VersionDetails represents the version details of the waterfall api
 type VersionDetails struct {
 	ProjectID   string `json:"project_id"`
 	ProjectName string `json:"project_name"`
@@ -48,7 +48,7 @@ type VersionDetails struct {
 	Builds      []int  `json:"builds"`
 }
 
-// BuildDetails represents the build details of the papermc api
+// BuildDetails represents the build details of the waterfall api
 type BuildDetails struct {
 	ProjectID   string    `json:"project_id"`
 	ProjectName string    `json:"project_name"`
