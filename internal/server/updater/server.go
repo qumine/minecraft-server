@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/qumine/qumine-server-java/internal/server/updater/custom"
+	"github.com/qumine/qumine-server-java/internal/server/updater/papermc"
 	"github.com/qumine/qumine-server-java/internal/server/updater/vanilla"
 	"github.com/qumine/qumine-server-java/internal/server/updater/yatopia"
 )
@@ -27,6 +28,8 @@ func NewUpdater() (Updater, error) {
 		return custom.NewCustomUpdater(), nil
 	case "VANILLA":
 		return vanilla.NewVanillaUpdater(), nil
+	case "PAPERMC":
+		return papermc.NewPaperMCUpdater(), nil
 	case "YATOPIA":
 		return yatopia.NewYatopiaUpdater(), nil
 	default:
