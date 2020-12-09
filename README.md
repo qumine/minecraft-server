@@ -76,7 +76,17 @@ docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16
 ### PaperMC
 
 ```
-W.I.P
+docker run -it --rm -p 25565:25565 -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+
+### Waterfall
+
+```
+docker run -it --rm -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+
+### Travertine
+
+```
+docker run -it --rm -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/qumine-server-java:latest
 ```
 
 ### Yatopia
