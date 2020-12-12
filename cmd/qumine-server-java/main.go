@@ -36,10 +36,12 @@ func main() {
 			&cli.BoolFlag{
 				Name:    "debug",
 				Aliases: []string{"d"},
+				EnvVars: []string{"DEBUG"},
 			},
 			&cli.BoolFlag{
 				Name:    "trace",
 				Aliases: []string{"t"},
+				EnvVars: []string{"TRACE"},
 			},
 		},
 		EnableBashCompletion: true,
