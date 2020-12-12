@@ -1,11 +1,6 @@
 package whitelist
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
-	"strings"
-
 	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
@@ -20,24 +15,30 @@ type User struct {
 
 // Configure the whitelist.json
 func Configure() {
-	if _, err := os.Stat("whitelist.json"); !os.IsNotExist(err) {
-		logrus.Info("whitelist.json does already exist, skipping configuration")
+	if !utils.GetEnvBool("SERVER_WHITE_LIST_FORCE", false) && utils.FileExists("ops.json") {
+		logrus.Info("whitelist.json already exist, skipping configuration")
 		return
 	}
-	logrus.Info("whitelist.json does not exist, configuring it now")
 
+	whitelist := newWhitelist(utils.GetEnvStringList("SERVER_WHITE_LIST", ""))
+	logrus.WithField("whitelist", whitelist).Info("whitelist.json not found, configuring it now")
+
+	if err := utils.WriteFileAsJSON("whitelist.json", &whitelist); err != nil {
+		logrus.WithError(err).Error("failed to configure whitelist.json")
+	}
+	logrus.Info("whitelist.json configured")
+}
+
+func newWhitelist(users []string) []User {
 	var whitelist []User
-	for _, n := range strings.Split(utils.GetEnvString("SERVER_WHITE_LIST", ""), ",") {
-		whitelist = append(whitelist, User{
-			Name: n,
-		})
+	for _, n := range users {
+		whitelist = append(whitelist, newUser(n))
 	}
-	b, err := json.Marshal(&whitelist)
-	if err != nil {
-		logrus.WithError(err).Error("failed to marshall whitelist.json")
-		return
-	}
-	if err := ioutil.WriteFile("whitelist.json", []byte(b), 0); err != nil {
-		logrus.WithError(err).Error("failed to write whitelist.json")
+	return whitelist
+}
+
+func newUser(name string) User {
+	return User{
+		Name: name,
 	}
 }
