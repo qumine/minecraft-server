@@ -1,11 +1,6 @@
 package operators
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"os"
-	"strings"
-
 	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
@@ -24,26 +19,32 @@ type User struct {
 
 // Configure the ops.json
 func Configure() {
-	if _, err := os.Stat("ops.json"); !os.IsNotExist(err) {
-		logrus.Info("ops.json does already exist, skipping configuration")
+	if !utils.GetEnvBool("SERVER_OPS_FORCE", false) && utils.FileExists("ops.json") {
+		logrus.Info("ops.json already exist, skipping configuration")
 		return
 	}
-	logrus.Info("ops.json does not exist, configuring it now")
 
-	var whitelist []User
-	for _, n := range strings.Split(utils.GetEnvString("SERVER_OPS", ""), ",") {
-		whitelist = append(whitelist, User{
-			Name:                n,
-			Level:               4,
-			BypassesPlayerLimit: true,
-		})
+	ops := newOps(utils.GetEnvStringList("SERVER_OPS", ""))
+	logrus.WithField("ops", ops).Info("ops.json not found, configuring it now")
+
+	if err := utils.WriteFileAsJSON("ops.json", &ops); err != nil {
+		logrus.WithError(err).Error("failed to configure ops.json")
 	}
-	b, err := json.Marshal(&whitelist)
-	if err != nil {
-		logrus.WithError(err).Error("failed to marshall ops.json")
-		return
+	logrus.Info("ops.json configured")
+}
+
+func newOps(users []string) []User {
+	var ops []User
+	for _, n := range users {
+		ops = append(ops, newUser(n))
 	}
-	if err := ioutil.WriteFile("ops.json", []byte(b), 0); err != nil {
-		logrus.WithError(err).Error("failed to write ops.json")
+	return ops
+}
+
+func newUser(name string) User {
+	return User{
+		Name:                name,
+		Level:               4,
+		BypassesPlayerLimit: true,
 	}
 }

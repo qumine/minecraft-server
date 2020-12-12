@@ -3,6 +3,7 @@ package utils
 import (
 	"os"
 	"strconv"
+	"strings"
 )
 
 // GetEnvString get key environment variable if exist otherwise return defalutValue
@@ -12,6 +13,11 @@ func GetEnvString(key string, defaultValue string) string {
 		return defaultValue
 	}
 	return value
+}
+
+// GetEnvStringList get key environment variable as string list if exist otherwise return defalutValue
+func GetEnvStringList(key string, defaultValue string) []string {
+	return strings.Split(GetEnvString(key, defaultValue), ",")
 }
 
 // GetEnvInt get key environment variable if exist otherwise return defalutValue
