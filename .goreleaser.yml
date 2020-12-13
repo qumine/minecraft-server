@@ -74,7 +74,7 @@ docker_manifests:
   image_templates:
   - qumine/qumine-server-java:latest-amd64
   - qumine/qumine-server-java:latest-arm64v8
-- name_template: umine/qumine-server-java:{{.Tag}}
+- name_template: qumine/qumine-server-java:{{.Tag}}
   image_templates:
   - qumine/qumine-server-java:{{.Tag}}-amd64
   - qumine/qumine-server-java:{{.Tag}}-arm64v8
