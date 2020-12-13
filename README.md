@@ -54,6 +54,11 @@ For example to add the users ```Notch``` and ```Herobrine``` to the initial whit
 SERVER_WHITE_LIST=Notch,Herobrine
 ```
 
+You can force the whitelist.json to be overriden every time the container starts up by settings the ```SERVER_WHITE_LIST_OVERRIDE``` environment variable.
+```
+SERVER_WHITE_LIST_OVERRIDE=true
+```
+
 ## ops.json
 
 ***ops.json will only be populated on the first start***
@@ -63,6 +68,11 @@ You can add initial players to the operators via the ```SERVER_OPS``` environmen
 For example to add the users ```Notch``` and ```Herobrine``` to the initial operators you would set:
 ```
 SERVER_OPS=Notch,Herobrine
+```
+
+You can force the ops.json to be overriden every time the container starts up by settings the ```SERVER_OPS_OVERRIDE``` environment variable.
+```
+SERVER_OPS_OVERRIDE=true
 ```
 
 ## Server Types
