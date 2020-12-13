@@ -19,7 +19,7 @@ type User struct {
 
 // Configure the ops.json
 func Configure() {
-	if !utils.GetEnvBool("SERVER_OPS_FORCE", false) && utils.FileExists("ops.json") {
+	if !utils.GetEnvBool("SERVER_OPS_OVERRIDE", false) && utils.FileExists("ops.json") {
 		logrus.Info("ops.json already exist, skipping configuration")
 		return
 	}

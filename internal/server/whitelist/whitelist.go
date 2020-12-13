@@ -15,7 +15,7 @@ type User struct {
 
 // Configure the whitelist.json
 func Configure() {
-	if !utils.GetEnvBool("SERVER_WHITE_LIST_FORCE", false) && utils.FileExists("ops.json") {
+	if !utils.GetEnvBool("SERVER_WHITE_LIST_OVERRIDE", false) && utils.FileExists("ops.json") {
 		logrus.Info("whitelist.json already exist, skipping configuration")
 		return
 	}
