@@ -41,4 +41,4 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Cleanup
-        run: rm -f ${HOME}/.docker
+        run: rm -rf ${HOME}/.docker
