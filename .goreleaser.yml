@@ -51,6 +51,8 @@ dockers:
   - "--label=org.opencontainers.image.created={{.Date}}"
   - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
   - "--label=org.opencontainers.image.licenses=AGPL-3.0"
+  extra_files:
+  - entrypoint.sh
 - dockerfile: build/package/Dockerfile
   image_templates:
   - "qumine/qumine-server-java:latest-arm64v8"
@@ -69,6 +71,8 @@ dockers:
   - "--label=org.opencontainers.image.created={{.Date}}"
   - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
   - "--label=org.opencontainers.image.licenses=AGPL-3.0"
+  extra_files:
+  - entrypoint.sh
 docker_manifests:
 - name_template: qumine/qumine-server-java:latest
   image_templates:
