@@ -25,7 +25,7 @@ func WriteFileAsJSON(fileName string, content interface{}) error {
 	if err != nil {
 		return err
 	}
-	if err := ioutil.WriteFile(fileName, []byte(b), 0); err != nil {
+	if err := ioutil.WriteFile(fileName, []byte(b), os.ModePerm); err != nil {
 		return err
 	}
 	return nil
