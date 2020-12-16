@@ -4,14 +4,12 @@ import (
 	"os/exec"
 	"syscall"
 	"time"
-
-	"github.com/qumine/qumine-server-java/internal/server/console"
 )
 
 // Wrapper represents the wrapper object of the minecraft server
 type Wrapper struct {
 	Status  string
-	Console *console.Console
+	Console *Console
 
 	cmd            *exec.Cmd
 	cmdStopTimeout time.Duration
@@ -30,7 +28,7 @@ func NewWrapper() *Wrapper {
 	stderr, _ := cmd.StderrPipe()
 	stdout, _ := cmd.StdoutPipe()
 	return &Wrapper{
-		Console: console.NewConsole(stdin, stderr, stdout),
+		Console: NewConsole(stdin, stderr, stdout),
 
 		cmd:            cmd,
 		cmdStopTimeout: 15 * time.Second,

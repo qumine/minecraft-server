@@ -6,7 +6,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,9 +19,6 @@ var logToStatus = map[string]*regexp.Regexp{
 // Start starts the wrapper and the minecraft server.
 func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 	logrus.Info("starting wrapper")
-
-	logrus.Info("writing eula.txt")
-	utils.WriteFileAsString("eula.txt", "eula=true")
 
 	go func() {
 		wg.Add(1)

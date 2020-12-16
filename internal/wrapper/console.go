@@ -1,4 +1,4 @@
-package console
+package wrapper
 
 import (
 	"bufio"

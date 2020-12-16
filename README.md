@@ -25,7 +25,7 @@ Docker Image for running minecraft servers.
 ## Quick Start
 
 ```
-docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA qumine/qumine-server-java:latest
 ```
 
 ## Accessing the server console
@@ -33,6 +33,13 @@ docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA qumine/qumine-server-j
 You can access the server console by executing ```console``` inside of the container. This will stream logs and allow you to send commands to the server.
 
 # Configuration
+
+## eula.txt
+
+To use the server you will need to accept the eula of mojang.
+```
+EULA=true
+```
 
 ## server.properties
 
@@ -80,35 +87,37 @@ SERVER_OPS_OVERRIDE=true
 ### Vanilla
 
 ```
-docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/qumine-server-java:latest
 ```
 
 ### PaperMC
 
 ```
-docker run -it --rm -p 25565:25565 -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+```
 
 ### Waterfall
 
 ```
-docker run -it --rm -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+```
 
 ### Travertine
 
 ```
-docker run -it --rm -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/qumine-server-java:latest
 ```
 
 ### Yatopia
 
 ```
-docker run -it --rm -p 25565:25565 -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/qumine-server-java:latest
 ```
 
 ### Custom
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download qumine/qumine-server-java:latest
 ```
 
 ## Plugins

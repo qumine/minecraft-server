@@ -1,4 +1,4 @@
-package properties
+package common
 
 import (
 	"os"
@@ -8,14 +8,16 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-// Configure the server.properties
-func Configure() {
+const serverPropertiesPath = "server.properties"
+
+// ConfigureServerProperties configures the server.properties
+func ConfigureServerProperties() error {
 	pp, err := props.LoadFile("", props.UTF8)
 	if err != nil {
 		if os.IsNotExist(err) {
-			logrus.Info("server.properties does not exist yet, will create it")
+			logrus.Infof("%s does not exist yet, will create it", serverPropertiesPath)
 		} else {
-			logrus.WithError(err).Error("Error loading server.properties")
+			logrus.WithError(err).Error("Error loading %s", serverPropertiesPath)
 		}
 		pp = props.NewProperties()
 	}
@@ -30,13 +32,14 @@ func Configure() {
 		}
 	}
 
-	f, err := os.Create("server.properties")
+	f, err := os.Create(serverPropertiesPath)
 	if err != nil {
-		logrus.WithError(err).Error("Failed to create server.properties")
+		return err
 	}
 	w, err := props.LoadMap(p).Write(f, props.UTF8)
 	if err != nil {
-		logrus.WithError(err).Error("Failed to write server.properties")
+		return err
 	}
-	logrus.WithField("bytesWritte", w).Debug("written server.properties")
+	logrus.WithField("bytesWritte", w).Debugf("%s configured", serverPropertiesPath)
+	return nil
 }

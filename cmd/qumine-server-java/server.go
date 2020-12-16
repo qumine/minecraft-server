@@ -8,11 +8,8 @@ import (
 	"syscall"
 
 	"github.com/qumine/qumine-server-java/internal/api"
-	"github.com/qumine/qumine-server-java/internal/grpc/server"
-	"github.com/qumine/qumine-server-java/internal/server/operators"
-	"github.com/qumine/qumine-server-java/internal/server/properties"
-	su "github.com/qumine/qumine-server-java/internal/server/updater"
-	"github.com/qumine/qumine-server-java/internal/server/whitelist"
+	grpc "github.com/qumine/qumine-server-java/internal/grpc/server"
+	"github.com/qumine/qumine-server-java/internal/server"
 	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -24,16 +21,20 @@ var ServerCommand = &cli.Command{
 	Aliases: []string{"s"},
 	Usage:   "Start the QuMine Server",
 	Action: func(c *cli.Context) error {
-		properties.Configure()
-		whitelist.Configure()
-		operators.Configure()
-
-		updateServer()
-		updatePlugins()
+		server, err := server.NewServer()
+		if err != nil {
+			logrus.WithError(err).Fatal("Unsupported serverType")
+		}
+		if err := server.Update(); err != nil {
+			logrus.WithError(err).Fatal("server updating failed")
+		}
+		if err := server.Configure(); err != nil {
+			logrus.WithError(err).Fatal("server configuration failed")
+		}
 
 		w := wrapper.NewWrapper()
 		a := api.NewAPI(w)
-		s := server.NewServer(w)
+		s := grpc.NewServer(w)
 
 		interrupt := make(chan os.Signal, 1)
 		signal.Notify(interrupt, syscall.SIGINT, syscall.SIGTERM)
@@ -52,20 +53,4 @@ var ServerCommand = &cli.Command{
 		logrus.Info("stopped")
 		return nil
 	},
-}
-
-func updateServer() {
-	updater, err := su.NewUpdater()
-	if err != nil {
-		logrus.WithError(err).Fatal("Unsupported serverType")
-	}
-	// TODO: If jar exists continue
-	if err := updater.Update(); err != nil {
-		logrus.WithError(err).Fatal("Failed to update server")
-	}
-	updater = nil
-}
-
-func updatePlugins() {
-	// TODO: Update all Plugins
 }

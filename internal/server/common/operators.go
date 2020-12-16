@@ -1,12 +1,14 @@
-package operators
+package common
 
 import (
 	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
-// User is a user on the operator list
-type User struct {
+const opsPath = "ops.json"
+
+// Operator is a user on the operator list
+type Operator struct {
 	// UUID is the uuid of the user
 	UUID string `json:"uuid"`
 	// Name is the name of the user
@@ -17,32 +19,36 @@ type User struct {
 	BypassesPlayerLimit bool `json:"bypassesPlayerLimit"`
 }
 
-// Configure the ops.json
-func Configure() {
-	if !utils.GetEnvBool("SERVER_OPS_OVERRIDE", false) && utils.FileExists("ops.json") {
+// ConfigureOps configures the ops.json
+func ConfigureOps() error {
+	if !utils.GetEnvBool("SERVER_OPS_OVERRIDE", false) && utils.FileExists(opsPath) {
 		logrus.Info("ops.json already exist, skipping configuration")
-		return
+		return nil
 	}
 
 	ops := newOps(utils.GetEnvStringList("SERVER_OPS", ""))
 	logrus.WithField("ops", ops).Info("ops.json not found, configuring it now")
 
-	if err := utils.WriteFileAsJSON("ops.json", &ops); err != nil {
-		logrus.WithError(err).Error("failed to configure ops.json")
+	if err := utils.WriteFileAsJSON(opsPath, &ops); err != nil {
+		return err
 	}
-	logrus.Info("ops.json configured")
+	logrus.Debug("ops.json configured")
+	return nil
 }
 
-func newOps(users []string) []User {
-	var ops []User
+func newOps(users []string) []Operator {
+	var ops []Operator
 	for _, n := range users {
-		ops = append(ops, newUser(n))
+		if n == "" {
+			continue
+		}
+		ops = append(ops, newOperator(n))
 	}
 	return ops
 }
 
-func newUser(name string) User {
-	return User{
+func newOperator(name string) Operator {
+	return Operator{
 		Name:                name,
 		Level:               4,
 		BypassesPlayerLimit: true,
