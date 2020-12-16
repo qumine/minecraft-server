@@ -30,7 +30,7 @@ docker run -it --rm -p 25565:25565 -e SERVER_TYPE=VANILLA qumine/qumine-server-j
 
 ## Accessing the server console
 
-You can access the server console by executing ```/qumine-server console``` inside of the container. This will stream logs and allow you to send commands to the server.
+You can access the server console by executing ```console``` inside of the container. This will stream logs and allow you to send commands to the server.
 
 # Configuration
 
