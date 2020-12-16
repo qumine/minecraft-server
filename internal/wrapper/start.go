@@ -2,12 +2,11 @@ package wrapper
 
 import (
 	"context"
-	"io/ioutil"
-	"os"
 	"regexp"
 	"sync"
 	"time"
 
+	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -23,7 +22,7 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 	logrus.Info("starting wrapper")
 
 	logrus.Info("writing eula.txt")
-	ioutil.WriteFile("./eula.txt", []byte("eula=true"), os.ModeAppend)
+	utils.WriteFileAsString("eula.txt", "eula=true")
 
 	go func() {
 		wg.Add(1)

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -55,18 +56,11 @@ func (u *Updater) downloadJar(url string) error {
 	logrus.WithField("body", rsp.Body).Trace("read jar")
 
 	logrus.Debug("saving jar")
-	saveErr := u.saveCurrentJar(body)
+	saveErr := utils.WriteFile("server.jar", body)
 	if saveErr != nil {
 		logrus.WithError(saveErr).Error("saving jar failed")
 		return saveErr
 	}
 	logrus.Trace("saved jar")
-	return nil
-}
-
-func (u *Updater) saveCurrentJar(jar []byte) error {
-	if err := ioutil.WriteFile("server.jar", jar, 0); err != nil {
-		return err
-	}
 	return nil
 }

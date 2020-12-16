@@ -153,7 +153,7 @@ func (u *Updater) downloadJar(url string) error {
 	logrus.WithField("body", rsp.Body).Trace("read jar")
 
 	logrus.Debug("saving jar")
-	saveErr := u.saveCurrentJar(body)
+	saveErr := utils.WriteFile("server.jar", body)
 	if saveErr != nil {
 		logrus.WithError(saveErr).Error("saving jar failed")
 		return saveErr
@@ -168,18 +168,4 @@ func (u *Updater) loadCurrentHash() (string, error) {
 		return "", err
 	}
 	return string(hash), nil
-}
-
-func (u *Updater) saveCurrentJar(jar []byte) error {
-	if err := ioutil.WriteFile("server.jar", jar, 0); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (u *Updater) saveCurrentHash(hash string) error {
-	if err := ioutil.WriteFile("server.hash", []byte(hash), 0); err != nil {
-		return err
-	}
-	return nil
 }
