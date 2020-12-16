@@ -97,7 +97,7 @@ func (u *Updater) Update() error {
 	}
 
 	logrus.Debug("saving new hash")
-	err = u.saveCurrentHash(buildDetails.Downloads.Application.Sha256)
+	err = utils.WriteFileAsString("server.hash", buildDetails.Downloads.Application.Sha256)
 	if err != nil {
 		return err
 	}

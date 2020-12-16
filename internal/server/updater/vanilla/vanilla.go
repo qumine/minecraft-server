@@ -85,7 +85,7 @@ func (u *Updater) Update() error {
 	}
 
 	logrus.Debug("saving new hash")
-	u.saveCurrentHash(versionDetails.Downloads.Client.Sha1)
+	err = utils.WriteFileAsString("server.hash", versionDetails.Downloads.Client.Sha1)
 	logrus.Trace("saved new hash")
 
 	logrus.Info("updated server")
