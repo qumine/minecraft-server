@@ -21,18 +21,18 @@ var ServerCommand = &cli.Command{
 	Aliases: []string{"s"},
 	Usage:   "Start the QuMine Server",
 	Action: func(c *cli.Context) error {
-		server, err := server.NewServer()
+		srv, err := server.NewServer()
 		if err != nil {
 			logrus.WithError(err).Fatal("Unsupported serverType")
 		}
-		if err := server.Update(); err != nil {
+		if err := srv.Update(); err != nil {
 			logrus.WithError(err).Fatal("server updating failed")
 		}
-		if err := server.Configure(); err != nil {
+		if err := srv.Configure(); err != nil {
 			logrus.WithError(err).Fatal("server configuration failed")
 		}
 
-		w := wrapper.NewWrapper()
+		w := wrapper.NewWrapper(srv)
 		a := api.NewAPI(w)
 		s := grpc.NewServer(w)
 

@@ -60,3 +60,8 @@ func (s *Server) Update() error {
 	logrus.Debug("server updated")
 	return nil
 }
+
+// StartupCommand retuns the command and arguments used to startup the server.
+func (s *Server) StartupCommand() (string, []string) {
+	return "java", []string{"-jar", "server.jar", "nogui"}
+}

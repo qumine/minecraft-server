@@ -4,6 +4,8 @@ import (
 	"os/exec"
 	"syscall"
 	"time"
+
+	"github.com/qumine/qumine-server-java/internal/server"
 )
 
 // Wrapper represents the wrapper object of the minecraft server
@@ -17,8 +19,10 @@ type Wrapper struct {
 }
 
 // NewWrapper creates a new wrapper
-func NewWrapper() *Wrapper {
-	cmd := exec.Command("java", "-jar", "server.jar", "nogui")
+func NewWrapper(srv server.Server) *Wrapper {
+	n, a := srv.StartupCommand()
+
+	cmd := exec.Command(n, a...)
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Setpgid: true,
 		Pgid:    0,

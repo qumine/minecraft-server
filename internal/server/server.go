@@ -19,6 +19,8 @@ type Server interface {
 	Configure() error
 	// Update updates the resource, if supported uses cache.
 	Update() error
+	// StartupCommand retuns the command and arguments used to startup the server.
+	StartupCommand() (string, []string)
 }
 
 // NewServer creates a new server for the serverType provided in the env variable SERVER_TYPE.
