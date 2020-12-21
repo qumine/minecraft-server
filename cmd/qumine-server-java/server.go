@@ -25,11 +25,11 @@ var ServerCommand = &cli.Command{
 		if err != nil {
 			logrus.WithError(err).Fatal("Unsupported serverType")
 		}
-		if err := srv.Update(); err != nil {
-			logrus.WithError(err).Fatal("server updating failed")
-		}
 		if err := srv.Configure(); err != nil {
 			logrus.WithError(err).Fatal("server configuration failed")
+		}
+		if err := srv.Update(); err != nil {
+			logrus.WithError(err).Fatal("server updating failed")
 		}
 
 		w := wrapper.NewWrapper(srv)

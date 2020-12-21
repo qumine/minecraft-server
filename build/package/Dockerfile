@@ -6,8 +6,12 @@ EXPOSE 8080 25565
 
 COPY qumine-server-java /usr/local/bin/qumine-server
 
-RUN groupadd -g 4242 -r qumine \
-&& useradd -g 4242 -M -N -r -u 4242 qumine \
+RUN apt update \
+&& apt install -y unzip wget \
+&& groupadd -g 4242 -r qumine \
+&& useradd -g 4242 -m -N -r -u 4242 qumine \
+# Tempfix for fabric installer
+# && useradd -g 4242 -M -N -r -u 4242 qumine \
 && mkdir /data \
 && chown -R qumine:qumine /data \
 && chmod -R 777 /data \

@@ -25,7 +25,7 @@ func DownloadToFile(url string, path string) error {
 		return readErr
 	}
 
-	if writeErr := WriteFile(path, body); err != nil {
+	if writeErr := WriteFile(path, body); writeErr != nil {
 		return writeErr
 	}
 

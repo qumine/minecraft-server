@@ -7,6 +7,7 @@ import (
 
 	"github.com/qumine/qumine-server-java/internal/server/custom"
 	"github.com/qumine/qumine-server-java/internal/server/papermc"
+	"github.com/qumine/qumine-server-java/internal/server/starter"
 	"github.com/qumine/qumine-server-java/internal/server/travertine"
 	"github.com/qumine/qumine-server-java/internal/server/vanilla"
 	"github.com/qumine/qumine-server-java/internal/server/waterfall"
@@ -28,12 +29,14 @@ func NewServer() (Server, error) {
 	switch strings.ToUpper(os.Getenv("SERVER_TYPE")) {
 	case "CUSTOM":
 		return custom.NewCustomServer(), nil
-	case "VANILLA":
-		return vanilla.NewVanillaServer(), nil
 	case "PAPERMC":
 		return papermc.NewPaperMCServer(), nil
+	case "STARTER":
+		return starter.NewStarterServer(), nil
 	case "TRAVERTINE":
 		return travertine.NewTravertineServer(), nil
+	case "VANILLA":
+		return vanilla.NewVanillaServer(), nil
 	case "WATERFALL":
 		return waterfall.NewWaterfallServer(), nil
 	case "YATOPIA":

@@ -84,36 +84,6 @@ SERVER_OPS_OVERRIDE=true
 
 ## Server Types
 
-### Vanilla
-
-```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/qumine-server-java:latest
-```
-
-### PaperMC
-
-```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
-```
-
-### Waterfall
-
-```
-docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/qumine-server-java:latest
-```
-
-### Travertine
-
-```
-docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/qumine-server-java:latest
-```
-
-### Yatopia
-
-```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/qumine-server-java:latest
-```
-
 ### Custom
 
 In custom mode by default the provided url will be downloaded and later executed with the java -jar command.
@@ -124,6 +94,45 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUST
 If you need to customize the startup command of your server you can use the SERVER_CUSTOM_COMMAND and SERVER_CUSTOM_ARGS environment variables.
 ```
 docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download -e SERVER_CUSTOM_COMMAND=java -e SERVER_CUSTOM_ARGS="-XX:+UseG1GC,-jar,download,nogui" qumine/qumine-server-java:latest
+```
+
+### PaperMC
+
+```
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+```
+
+### ServerStarter
+
+This will configure the server using [ServerStarter](https://github.com/Yoosk/ServerStarter).
+```
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+```
+
+**NOTE:** The amount of memory must fit the minRam and maxRam options of the server-setup-config.yaml.
+
+### Travertine
+
+```
+docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+```
+
+### Vanilla
+
+```
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/qumine-server-java:latest
+```
+
+### Waterfall
+
+```
+docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+```
+
+### Yatopia
+
+```
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/qumine-server-java:latest
 ```
 
 ## Plugins
