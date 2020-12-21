@@ -120,6 +120,11 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATO
 docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download qumine/qumine-server-java:latest
 ```
 
+If you need to customize the startup command of your server you can use the SERVER_CUSTOM_COMMAND and SERVER_CUSTOM_ARGS environment variables.
+```
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download -e SERVER_CUSTOM_COMMAND=java -e SERVER_CUSTOM_ARGS="-XX:+UseG1GC,-jar,server.jar,nogui" qumine/qumine-server-java:latest
+```
+
 ## Plugins
 
 ```

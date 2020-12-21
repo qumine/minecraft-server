@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"github.com/qumine/qumine-server-java/internal/server/common"
+	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
@@ -63,5 +64,5 @@ func (s *Server) Update() error {
 
 // StartupCommand retuns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
-	return "java", []string{"-jar", "server.jar", "nogui"}
+	return utils.GetEnvString("SERVER_CUSTOM_COMMAND", "java"), utils.GetEnvStringList("SERVER_CUSTOM_ARGS", "-jar,server.jar,nogui")
 }
