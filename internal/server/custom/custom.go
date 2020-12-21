@@ -2,6 +2,7 @@ package custom
 
 import (
 	"os"
+	"strings"
 
 	"github.com/qumine/qumine-server-java/internal/server/common"
 	"github.com/qumine/qumine-server-java/internal/utils"
@@ -11,6 +12,8 @@ import (
 // Server is the updater for custom servers.
 type Server struct {
 	customURL string
+
+	filename string
 }
 
 // NewCustomServer creates a new custom server.
@@ -54,7 +57,9 @@ func (s *Server) Update() error {
 		"customURL": s.customURL,
 	}).Info("server updating")
 
-	if err := common.DownloadServerJar(s.customURL); err != nil {
+	parts := strings.Split(s.customURL, "/")
+	s.filename = parts[len(parts)-1]
+	if err := utils.DownloadToFile(s.customURL, s.filename); err != nil {
 		return err
 	}
 
@@ -64,5 +69,5 @@ func (s *Server) Update() error {
 
 // StartupCommand retuns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
-	return utils.GetEnvString("SERVER_CUSTOM_COMMAND", "java"), utils.GetEnvStringList("SERVER_CUSTOM_ARGS", "-jar,server.jar,nogui")
+	return utils.GetEnvString("SERVER_CUSTOM_COMMAND", "java"), utils.GetEnvStringList("SERVER_CUSTOM_ARGS", "-jar,"+s.filename+",nogui")
 }

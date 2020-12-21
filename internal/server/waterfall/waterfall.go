@@ -87,7 +87,7 @@ func (s *Server) Update() error {
 		return nil
 	}
 
-	if err := common.DownloadServerJar(buildDetailsURL + "/downloads/" + buildDetails.Downloads.Application.Name); err != nil {
+	if err := utils.DownloadToFile(buildDetailsURL+"/downloads/"+buildDetails.Downloads.Application.Name, "waterfall.jar"); err != nil {
 		return err
 	}
 
@@ -101,5 +101,5 @@ func (s *Server) Update() error {
 
 // StartupCommand retuns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
-	return "java", []string{"-jar", "server.jar", "nogui"}
+	return "java", []string{"-jar", "waterfall.jar", "nogui"}
 }

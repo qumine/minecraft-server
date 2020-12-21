@@ -91,7 +91,7 @@ func (s *Server) Update() error {
 		return nil
 	}
 
-	if err := common.DownloadServerJar(versionDetails.Downloads.Server.URL); err != nil {
+	if err := utils.DownloadToFile(versionDetails.Downloads.Server.URL, "vanilla.jar"); err != nil {
 		return err
 	}
 
@@ -105,5 +105,5 @@ func (s *Server) Update() error {
 
 // StartupCommand retuns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
-	return "java", []string{"-jar", "server.jar", "nogui"}
+	return "java", []string{"-jar", "vanilla.jar", "nogui"}
 }
