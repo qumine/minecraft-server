@@ -34,14 +34,6 @@ func NewWaterfallServer() *Server {
 
 // Configure configures the server.
 func (s *Server) Configure() error {
-	logrus.WithFields(logrus.Fields{
-		"type":        "WATERFALL",
-		"version":     s.serverVersion,
-		"forceUpdate": s.serverForceUpdate,
-		"yatopiaApi":  s.waterfallAPI,
-	}).Info("server configuring")
-
-	logrus.Debug("server configured")
 	return nil
 }
 
@@ -52,7 +44,7 @@ func (s *Server) Update() error {
 		"version":      s.serverVersion,
 		"forceUpdate":  s.serverForceUpdate,
 		"waterfallAPI": s.waterfallAPI,
-	}).Info("checking for server updates")
+	}).Debug("updating server")
 
 	version := ""
 	if match, _ := regexp.MatchString("\\d*\\.\\d*\\.\\d", s.serverVersion); match {
@@ -83,7 +75,12 @@ func (s *Server) Update() error {
 	}
 
 	if common.CompareHash(s.serverForceUpdate, buildDetails.Downloads.Application.Sha256) {
-		logrus.Info("updated server")
+		logrus.WithFields(logrus.Fields{
+			"type":         "WATERFALL",
+			"version":      s.serverVersion,
+			"forceUpdate":  s.serverForceUpdate,
+			"waterfallAPI": s.waterfallAPI,
+		}).Info("updating server skipped, jar seems up to date")
 		return nil
 	}
 
@@ -95,7 +92,12 @@ func (s *Server) Update() error {
 		return err
 	}
 
-	logrus.Info("updated server")
+	logrus.WithFields(logrus.Fields{
+		"type":         "WATERFALL",
+		"version":      s.serverVersion,
+		"forceUpdate":  s.serverForceUpdate,
+		"waterfallAPI": s.waterfallAPI,
+	}).Info("updated server")
 	return nil
 }
 

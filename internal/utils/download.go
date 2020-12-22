@@ -12,7 +12,7 @@ func DownloadToFile(url string, path string) error {
 	logrus.WithFields(logrus.Fields{
 		"url":  url,
 		"path": path,
-	}).Debug("downloading file")
+	}).Trace("downloading file")
 
 	rsp, getErr := http.Get(url)
 	if getErr != nil {
@@ -32,6 +32,6 @@ func DownloadToFile(url string, path string) error {
 	logrus.WithFields(logrus.Fields{
 		"url":  url,
 		"path": path,
-	}).Info("downloaded file")
+	}).Debug("downloaded file")
 	return nil
 }

@@ -4,34 +4,44 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+
+	"github.com/sirupsen/logrus"
 )
 
 // FileExists returns wether a file exists or not
-func FileExists(fileName string) bool {
-	if _, err := os.Stat(fileName); !os.IsNotExist(err) {
+func FileExists(path string) bool {
+	if _, err := os.Stat(path); !os.IsNotExist(err) {
 		return true
 	}
 	return false
 }
 
 // WriteFileAsString writes a string to a file.
-func WriteFileAsString(fileName string, content string) error {
-	return WriteFile(fileName, []byte(content))
+func WriteFileAsString(path string, content string) error {
+	return WriteFile(path, []byte(content))
 }
 
 // WriteFileAsJSON writes JSON to a file.
-func WriteFileAsJSON(fileName string, content interface{}) error {
+func WriteFileAsJSON(path string, content interface{}) error {
 	b, err := json.Marshal(content)
 	if err != nil {
 		return err
 	}
-	return WriteFile(fileName, []byte(b))
+	return WriteFile(path, []byte(b))
 }
 
 // WriteFile writes bytes to a file.
-func WriteFile(fileName string, content []byte) error {
-	if err := ioutil.WriteFile(fileName, content, os.ModePerm); err != nil {
+func WriteFile(path string, content []byte) error {
+	logrus.WithFields(logrus.Fields{
+		"path": path,
+	}).Trace("writing file")
+
+	if err := ioutil.WriteFile(path, content, os.ModePerm); err != nil {
 		return err
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"path": path,
+	}).Debug("written file")
 	return nil
 }

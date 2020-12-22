@@ -64,7 +64,7 @@ func (s *Server) Update() error {
 		"version":     s.serverVersion,
 		"forceUpdate": s.serverForceUpdate,
 		"vanillaAPI":  s.serverVanillaAPI,
-	}).Info("checking for server updates")
+	}).Debug("updating server")
 
 	versionManifest, err := getVersionManifest(s.serverVanillaAPI)
 	if err != nil {
@@ -87,7 +87,12 @@ func (s *Server) Update() error {
 	}
 
 	if common.CompareHash(s.serverForceUpdate, versionDetails.Downloads.Client.Sha1) {
-		logrus.Info("updated server")
+		logrus.WithFields(logrus.Fields{
+			"type":        "VANILLA",
+			"version":     s.serverVersion,
+			"forceUpdate": s.serverForceUpdate,
+			"vanillaAPI":  s.serverVanillaAPI,
+		}).Info("updating server skipped, jar seems up to date")
 		return nil
 	}
 
@@ -99,7 +104,12 @@ func (s *Server) Update() error {
 		return err
 	}
 
-	logrus.Info("updated server")
+	logrus.WithFields(logrus.Fields{
+		"type":        "VANILLA",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"vanillaAPI":  s.serverVanillaAPI,
+	}).Info("updated server")
 	return nil
 }
 

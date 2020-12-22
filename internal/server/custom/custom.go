@@ -28,7 +28,7 @@ func (s *Server) Configure() error {
 	logrus.WithFields(logrus.Fields{
 		"type":      "CUSTOM",
 		"customURL": s.customURL,
-	}).Info("server configuring")
+	}).Debug("configuring server")
 
 	if err := common.ConfigureEula(); err != nil {
 		return err
@@ -46,7 +46,10 @@ func (s *Server) Configure() error {
 		return err
 	}
 
-	logrus.Debug("server configured")
+	logrus.WithFields(logrus.Fields{
+		"type":      "CUSTOM",
+		"customURL": s.customURL,
+	}).Info("configured server")
 	return nil
 }
 
@@ -55,7 +58,7 @@ func (s *Server) Update() error {
 	logrus.WithFields(logrus.Fields{
 		"type":      "CUSTOM",
 		"customURL": s.customURL,
-	}).Info("server updating")
+	}).Debug("updating server")
 
 	parts := strings.Split(s.customURL, "/")
 	s.filename = parts[len(parts)-1]
@@ -63,7 +66,10 @@ func (s *Server) Update() error {
 		return err
 	}
 
-	logrus.Debug("server updated")
+	logrus.WithFields(logrus.Fields{
+		"type":      "CUSTOM",
+		"customURL": s.customURL,
+	}).Info("updated server")
 	return nil
 }
 

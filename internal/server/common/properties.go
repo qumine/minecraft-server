@@ -8,24 +8,28 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const serverPropertiesPath = "server.properties"
+const (
+	serverPropertiesPath = "server.properties"
+
+	envServerProperties = "SERVER_PROPERTIES_"
+)
 
 // ConfigureServerProperties configures the server.properties
 func ConfigureServerProperties() error {
+	logrus.Debugf("configuring %s", serverPropertiesPath)
+
 	pp, err := props.LoadFile("", props.UTF8)
 	if err != nil {
-		if os.IsNotExist(err) {
-			logrus.Infof("%s does not exist yet, will create it", serverPropertiesPath)
-		} else {
-			logrus.WithError(err).Error("Error loading %s", serverPropertiesPath)
+		if !os.IsNotExist(err) {
+			return err
 		}
 		pp = props.NewProperties()
 	}
 	p := pp.Map()
 	for _, element := range os.Environ() {
 		variable := strings.Split(element, "=")
-		if strings.HasPrefix(variable[0], "SERVER_PROPERTIES_") {
-			variable[0] = strings.ReplaceAll(variable[0], "SERVER_PROPERTIES_", "")
+		if strings.HasPrefix(variable[0], envServerProperties) {
+			variable[0] = strings.ReplaceAll(variable[0], envServerProperties, "")
 			variable[0] = strings.ReplaceAll(variable[0], "_", "-")
 			variable[0] = strings.ToLower(variable[0])
 			p[variable[0]] = variable[1]
@@ -36,10 +40,10 @@ func ConfigureServerProperties() error {
 	if err != nil {
 		return err
 	}
-	w, err := props.LoadMap(p).Write(f, props.UTF8)
-	if err != nil {
+	if _, err := props.LoadMap(p).Write(f, props.UTF8); err != nil {
 		return err
 	}
-	logrus.WithField("bytesWritte", w).Debugf("%s configured", serverPropertiesPath)
+
+	logrus.Infof("configured %s", serverPropertiesPath)
 	return nil
 }

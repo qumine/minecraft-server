@@ -39,7 +39,7 @@ func (s *Server) Configure() error {
 		"version":     s.serverVersion,
 		"forceUpdate": s.serverForceUpdate,
 		"papermcAPI":  s.papermcAPI,
-	}).Info("server configuring")
+	}).Debug("configuring server")
 
 	if err := common.ConfigureEula(); err != nil {
 		return err
@@ -57,7 +57,12 @@ func (s *Server) Configure() error {
 		return err
 	}
 
-	logrus.Debug("server configured")
+	logrus.WithFields(logrus.Fields{
+		"type":        "PAPERMC",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"papermcAPI":  s.papermcAPI,
+	}).Info("configured server")
 	return nil
 }
 
@@ -68,7 +73,7 @@ func (s *Server) Update() error {
 		"version":     s.serverVersion,
 		"forceUpdate": s.serverForceUpdate,
 		"papermcAPI":  s.papermcAPI,
-	}).Info("server updating")
+	}).Debug("updating server")
 
 	version := ""
 	if match, _ := regexp.MatchString("\\d*\\.\\d*\\.\\d", s.serverVersion); match {
@@ -99,7 +104,12 @@ func (s *Server) Update() error {
 	}
 
 	if common.CompareHash(s.serverForceUpdate, buildDetails.Downloads.Application.Sha256) {
-		logrus.Info("updated server")
+		logrus.WithFields(logrus.Fields{
+			"type":        "PAPERMC",
+			"version":     s.serverVersion,
+			"forceUpdate": s.serverForceUpdate,
+			"papermcAPI":  s.papermcAPI,
+		}).Info("updating server skipped, jar seems up to date")
 		return nil
 	}
 
@@ -111,7 +121,12 @@ func (s *Server) Update() error {
 		return err
 	}
 
-	logrus.Info("updated server")
+	logrus.WithFields(logrus.Fields{
+		"type":        "PAPERMC",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"papermcAPI":  s.papermcAPI,
+	}).Info("updated server")
 	return nil
 }
 

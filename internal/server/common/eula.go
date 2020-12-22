@@ -1,23 +1,27 @@
 package common
 
 import (
-	"errors"
-
 	"github.com/qumine/qumine-server-java/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 
-const eulaPath = "eula.txt"
+const (
+	eulaPath = "eula.txt"
+
+	envEula = "EULA"
+)
 
 // ConfigureEula writes the eula.txt in the current directory if the env variable EULA is set.
 func ConfigureEula() error {
-	logrus.Info("eula configuring")
-	if !utils.GetEnvBool("EULA", false) {
-		return errors.New("EULA is not true")
-	}
+	eula := utils.GetEnvString(envEula, "false")
+	logrus.WithFields(logrus.Fields{
+		"eula": eula,
+	}).Debugf("configuring %s", eulaPath)
 
-	utils.WriteFileAsString(eulaPath, "eula=true")
+	utils.WriteFileAsString(eulaPath, "eula="+eula)
 
-	logrus.Info("eula configured")
+	logrus.WithFields(logrus.Fields{
+		"eula": eula,
+	}).Infof("configured %s", eulaPath)
 	return nil
 }

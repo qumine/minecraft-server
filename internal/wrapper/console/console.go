@@ -1,4 +1,4 @@
-package wrapper
+package console
 
 import (
 	"bufio"
@@ -28,20 +28,6 @@ func NewConsole(stdin io.Writer, stderr io.Reader, stdout io.Reader) *Console {
 	}
 }
 
-// Start will start the console, it will follow the logs
-func (c *Console) Start() {
-	for {
-		if l, err := c.readLine(); err == nil {
-			go func() {
-				for _, s := range c.subscriber {
-					s(l)
-				}
-			}()
-			fmt.Print(l)
-		}
-	}
-}
-
 // Subscribe subscribes to the log stream
 func (c *Console) Subscribe(name string, handler func(line string)) {
 	c.subscriber[name] = handler
@@ -54,22 +40,17 @@ func (c *Console) Unsubscribe(name string) {
 
 // SendCommand sends a command to the minecraft server
 func (c *Console) SendCommand(cmd string) error {
-	logrus.WithField("cmd", cmd).Debug("sending command")
+	logrus.WithFields(logrus.Fields{
+		"cmd": cmd,
+	}).Trace("sending command")
+
 	if _, err := c.stdin.WriteString(fmt.Sprintf("%s\r\n", cmd)); err != nil {
 		logrus.WithError(err).Error("sending command failed")
 		return err
 	}
-	logrus.Trace("send command")
-	return c.stdin.Flush()
-}
 
-func (c *Console) readLine() (string, error) {
-	if c.stdout == nil {
-		return "", io.EOF
-	}
-	l, err := c.stdout.ReadString('\n')
-	if err == io.EOF {
-		return "", io.EOF
-	}
-	return l, nil
+	logrus.WithFields(logrus.Fields{
+		"cmd": cmd,
+	}).Trace("send command")
+	return c.stdin.Flush()
 }

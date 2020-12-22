@@ -14,7 +14,7 @@ const (
 
 // CompareHash loads the current hash from server.hash in the current directory and compares it with the given hash.
 func CompareHash(force bool, hash string) bool {
-	logrus.WithField("force", force).WithField("hash", hash).Info("hash comparing")
+	logrus.WithField("force", force).WithField("hash", hash).Trace("hash comparing")
 	if force {
 		return false
 	}
@@ -31,7 +31,7 @@ func CompareHash(force bool, hash string) bool {
 
 // SaveHash saves the new hash as server.hash in the current directory.
 func SaveHash(hash string) error {
-	logrus.WithField("path", serverHashPath).Info("hash saving")
+	logrus.WithField("path", serverHashPath).Trace("hash saving")
 	if err := utils.WriteFileAsString(serverHashPath, hash); err != nil {
 		return err
 	}

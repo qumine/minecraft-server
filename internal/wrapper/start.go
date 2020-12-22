@@ -18,32 +18,20 @@ var logToStatus = map[string]*regexp.Regexp{
 
 // Start starts the wrapper and the minecraft server.
 func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
-	logrus.Info("starting wrapper")
+	logrus.WithFields(logrus.Fields{
+		"path": w.cmd.Path,
+		"args": w.cmd.Args,
+	}).Debug("starting wrapper")
+	wg.Add(1)
 
-	go func() {
-		wg.Add(1)
-		if err := w.cmd.Start(); err != nil {
-			logrus.WithError(err).Fatal("starting wrapper failed")
-		}
-		w.cmdKeepRunning = true
-	}()
-	go func() {
-		w.Console.Subscribe("wrapper", w.handleLog)
-		w.Console.Start()
-	}()
-	go func() {
-		for {
-			if w.cmdKeepRunning {
-				err := w.cmd.Wait()
-				if err != nil {
-					logrus.WithError(err).Fatal("java process stopped unexpectedly")
-				}
-			}
-			time.Sleep(time.Second)
-		}
-	}()
-	logrus.Info("started wrapper")
+	go w.startConsole()
+	go w.startCommand()
+	go w.startWatchdog()
 
+	logrus.WithFields(logrus.Fields{
+		"path": w.cmd.Path,
+		"args": w.cmd.Args,
+	}).Info("started wrapper")
 	for {
 		select {
 		case <-ctx.Done():
@@ -53,10 +41,26 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 	}
 }
 
-func (w *Wrapper) handleLog(line string) {
-	for status, reg := range logToStatus {
-		if reg.MatchString(line) {
-			w.Status = status
+func (w *Wrapper) startConsole() {
+	w.Console.Subscribe("wrapper", w.onLog)
+	w.Console.Start()
+}
+
+func (w *Wrapper) startCommand() {
+	if err := w.cmd.Start(); err != nil {
+		logrus.WithError(err).Fatal("starting wrapper failed")
+	}
+	w.cmdKeepRunning = true
+}
+
+func (w *Wrapper) startWatchdog() {
+	for {
+		time.Sleep(time.Second)
+		if err := w.cmd.Wait(); err != nil {
+			w.cmdExited = true
+			if w.cmdKeepRunning {
+				logrus.Fatal("java process stopped unexpectedly")
+			}
 		}
 	}
 }

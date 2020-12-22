@@ -35,7 +35,11 @@ func (s *Server) Configure() error {
 		"version":     s.serverVersion,
 		"forceUpdate": s.serverForceUpdate,
 		"yatopiaApi":  s.yatopiaAPI,
-	}).Info("server configuring")
+	}).Debug("configuring server")
+
+	if err := common.ConfigureEula(); err != nil {
+		return err
+	}
 
 	if err := common.ConfigureOps(); err != nil {
 		return err
@@ -49,7 +53,12 @@ func (s *Server) Configure() error {
 		return err
 	}
 
-	logrus.Debug("server configured")
+	logrus.WithFields(logrus.Fields{
+		"type":        "YATOPIA",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"yatopiaApi":  s.yatopiaAPI,
+	}).Info("configured server")
 	return nil
 }
 
@@ -60,11 +69,7 @@ func (s *Server) Update() error {
 		"version":     s.serverVersion,
 		"forceUpdate": s.serverForceUpdate,
 		"yatopiaApi":  s.yatopiaAPI,
-	}).Info("checking for server updates")
-
-	if err := common.ConfigureEula(); err != nil {
-		return err
-	}
+	}).Debug("updating server")
 
 	versionDetailsDownloadURL := s.yatopiaAPI
 	if s.serverVersion != "latest" {
@@ -77,7 +82,12 @@ func (s *Server) Update() error {
 	}
 
 	if common.CompareHash(s.serverForceUpdate, versionDetails.Branch.Commit.Sha) {
-		logrus.Info("updated server")
+		logrus.WithFields(logrus.Fields{
+			"type":        "YATOPIA",
+			"version":     s.serverVersion,
+			"forceUpdate": s.serverForceUpdate,
+			"yatopiaApi":  s.yatopiaAPI,
+		}).Info("updating server skipped, jar seems up to date")
 		return nil
 	}
 
@@ -89,7 +99,12 @@ func (s *Server) Update() error {
 		return err
 	}
 
-	logrus.Info("updated server")
+	logrus.WithFields(logrus.Fields{
+		"type":        "YATOPIA",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"yatopiaApi":  s.yatopiaAPI,
+	}).Info("updated server")
 	return nil
 }
 

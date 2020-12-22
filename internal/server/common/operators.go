@@ -7,21 +7,34 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const opsPath = "ops.txt"
+const (
+	opsPath = "ops.txt"
+
+	envOps         = "SERVER_OPS"
+	envOpsOverride = "SERVER_OPS_OVERRIDE"
+)
 
 // ConfigureOps configures the ops.json
 func ConfigureOps() error {
-	if !utils.GetEnvBool("SERVER_OPS_OVERRIDE", false) && utils.FileExists(opsPath) {
-		logrus.Infof("%s already exist, skipping configuration", opsPath)
+	ops := utils.GetEnvStringList(envOps, "")
+	opsOverride := utils.GetEnvBool(envOpsOverride, false)
+	logrus.WithFields(logrus.Fields{
+		"ops":         ops,
+		"opsOverride": opsOverride,
+	}).Debugf("configuring %s", opsPath)
+
+	if !opsOverride && utils.FileExists(opsPath) {
+		logrus.Infof("configuring %s skipped, file already exists. Override this behaviour using the %s", opsPath, envOpsOverride)
 		return nil
 	}
-
-	ops := utils.GetEnvStringList("SERVER_OPS", "")
-	logrus.WithField("ops", ops).Infof("%s not found, configuring it now", opsPath)
 
 	if err := utils.WriteFileAsString(opsPath, strings.Join(ops, "\n")); err != nil {
 		return err
 	}
-	logrus.Debugf("%s configured", opsPath)
+
+	logrus.WithFields(logrus.Fields{
+		"ops":         ops,
+		"opsOverride": opsOverride,
+	}).Infof("configured %s", opsPath)
 	return nil
 }

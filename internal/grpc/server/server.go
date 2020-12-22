@@ -34,11 +34,15 @@ func NewServer(w *wrapper.Wrapper) *GRPCServer {
 
 // Start the GRPCServer
 func (s *GRPCServer) Start(ctx context.Context, wg *sync.WaitGroup) {
-	logrus.WithField("addr", s.Addr).Info("starting grpc server")
+	logrus.WithFields(logrus.Fields{
+		"addr": s.Addr,
+	}).Debug("starting grpc")
 
 	c, err := net.Listen("tcp", s.Addr)
 	if err != nil {
-		logrus.WithError(err).Fatal("starting grpc server failed")
+		logrus.WithFields(logrus.Fields{
+			"addr": s.Addr,
+		}).Fatal("starting grpc failed")
 	}
 
 	qugrpc.RegisterQuMineServerServer(s.grpcServer, s)
@@ -48,8 +52,10 @@ func (s *GRPCServer) Start(ctx context.Context, wg *sync.WaitGroup) {
 		wg.Add(1)
 		s.grpcServer.Serve(c)
 	}()
-	logrus.Info("started grpc server")
 
+	logrus.WithFields(logrus.Fields{
+		"addr": s.Addr,
+	}).Info("started grpc")
 	for {
 		select {
 		case <-ctx.Done():
@@ -61,9 +67,15 @@ func (s *GRPCServer) Start(ctx context.Context, wg *sync.WaitGroup) {
 
 // Stop the api
 func (s *GRPCServer) Stop(wg *sync.WaitGroup) {
-	logrus.Info("stopping grpc server")
+	logrus.WithFields(logrus.Fields{
+		"addr": s.Addr,
+	}).Debug("stopping grpc")
+
 	s.grpcServer.GracefulStop()
-	logrus.Info("stopped grpc server")
+
+	logrus.WithFields(logrus.Fields{
+		"addr": s.Addr,
+	}).Debug("stopped grpc")
 	wg.Done()
 }
 

@@ -38,15 +38,22 @@ func NewAPI(w *wrapper.Wrapper) *API {
 
 // Start the Api
 func (a *API) Start(ctx context.Context, wg *sync.WaitGroup) {
-	logrus.WithField("addr", a.httpServer.Addr).Info("starting api")
+	logrus.WithFields(logrus.Fields{
+		"addr": a.httpServer.Addr,
+	}).Debug("starting api")
 
 	go func() {
 		wg.Add(1)
 		if err := a.httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			logrus.WithError(err).Fatal("starting api failed")
+			logrus.WithFields(logrus.Fields{
+				"addr": a.httpServer.Addr,
+			}).Fatal("starting api failed")
 		}
 	}()
 
+	logrus.WithFields(logrus.Fields{
+		"addr": a.httpServer.Addr,
+	}).Info("started api")
 	for {
 		select {
 		case <-ctx.Done():
@@ -58,10 +65,18 @@ func (a *API) Start(ctx context.Context, wg *sync.WaitGroup) {
 
 // Stop the api
 func (a *API) Stop(wg *sync.WaitGroup) {
-	logrus.Info("stopping api")
+	logrus.WithFields(logrus.Fields{
+		"addr": a.httpServer.Addr,
+	}).Info("stopping api")
+
 	if err := a.httpServer.Close(); err != nil {
-		logrus.WithError(err).Error("stopping api failed")
+		logrus.WithFields(logrus.Fields{
+			"addr": a.httpServer.Addr,
+		}).Error("stopping api failed")
 	}
-	logrus.Info("stopped api")
+
+	logrus.WithFields(logrus.Fields{
+		"addr": a.httpServer.Addr,
+	}).Info("stopped api")
 	wg.Done()
 }

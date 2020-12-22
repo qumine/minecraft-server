@@ -7,22 +7,34 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const whitelistPath = "white-list.txt"
+const (
+	whitelistPath = "white-list.txt"
+
+	envWhitelist         = "SERVER_WHITE_LIST"
+	envWhitelistOverride = "SERVER_WHITE_LIST_OVERRIDE"
+)
 
 // ConfigureWhitelist configures the whitelist.json
 func ConfigureWhitelist() error {
-	if !utils.GetEnvBool("SERVER_WHITE_LIST_OVERRIDE", false) && utils.FileExists(whitelistPath) {
-		logrus.Infof("%s already exist, skipping configuration", whitelistPath)
+	whitelist := utils.GetEnvStringList(envOps, "")
+	whitelistOverride := utils.GetEnvBool(envOpsOverride, false)
+	logrus.WithFields(logrus.Fields{
+		"whitelist":         whitelist,
+		"whitelistOverride": whitelistOverride,
+	}).Debugf("configuring %s", whitelistPath)
+
+	if !whitelistOverride && utils.FileExists(whitelistPath) {
+		logrus.Infof("configuring %s skipped, file already exists. Override this behaviour using the %s", opsPath, envWhitelistOverride)
 		return nil
 	}
 
-	whitelist := utils.GetEnvStringList("SERVER_WHITE_LIST", "")
-	logrus.WithField("whitelist", whitelist).Infof("%s not found, configuring it now", whitelistPath)
-
-	strings.Join(whitelist, "\n")
-	if err := utils.WriteFileAsString(whitelistPath, strings.Join(whitelist, "\n")); err != nil {
+	if err := utils.WriteFileAsString(opsPath, strings.Join(whitelist, "\n")); err != nil {
 		return err
 	}
-	logrus.Debugf("%s configured", whitelistPath)
+
+	logrus.WithFields(logrus.Fields{
+		"whitelist":         whitelist,
+		"whitelistOverride": whitelistOverride,
+	}).Infof("configured %s", whitelistPath)
 	return nil
 }
