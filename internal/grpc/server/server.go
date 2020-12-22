@@ -99,4 +99,5 @@ func (s *GRPCServer) SendCommand(req *qugrpc.SendCommandRequest, srv qugrpc.QuMi
 		return err
 	}
 	srv.Send(&qugrpc.SendCommandResponse{})
+	return nil
 }
