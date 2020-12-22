@@ -73,7 +73,7 @@ func (s *Server) Update() error {
 	return nil
 }
 
-// StartupCommand retuns the command and arguments used to startup the server.
+// StartupCommand returns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
 	return utils.GetEnvString("SERVER_CUSTOM_COMMAND", "java"), utils.GetEnvStringList("SERVER_CUSTOM_ARGS", "-jar,"+s.filename+",nogui")
 }

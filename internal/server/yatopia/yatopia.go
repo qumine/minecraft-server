@@ -108,7 +108,7 @@ func (s *Server) Update() error {
 	return nil
 }
 
-// StartupCommand retuns the command and arguments used to startup the server.
+// StartupCommand returns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
 	return "java", []string{"-jar", "yatopia.jar", "nogui"}
 }

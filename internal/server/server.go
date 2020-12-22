@@ -20,7 +20,7 @@ type Server interface {
 	Configure() error
 	// Update updates the resource, if supported uses cache.
 	Update() error
-	// StartupCommand retuns the command and arguments used to startup the server.
+	// StartupCommand returns the command and arguments used to startup the server.
 	StartupCommand() (string, []string)
 }
 

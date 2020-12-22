@@ -10,9 +10,7 @@ import (
 	"github.com/qumine/qumine-server-java/internal/wrapper"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/reflection"
-	"google.golang.org/grpc/status"
 )
 
 // GRPCServer represents the grpc server
@@ -98,9 +96,7 @@ func (s *GRPCServer) StreamLogs(req *qugrpc.LogStreamRequest, srv qugrpc.QuMineS
 // SendCommand sends a command to the minecraft server
 func (s *GRPCServer) SendCommand(req *qugrpc.SendCommandRequest, srv qugrpc.QuMineServer_SendCommandServer) error {
 	if err := s.Wrapper.Console.SendCommand(req.Line); err != nil {
-		srv.Send(&qugrpc.SendCommandResponse{})
-		return nil
-	} else {
-		return status.Errorf(codes.Internal, "method StreamLogs not implemented")
+		return err
 	}
+	srv.Send(&qugrpc.SendCommandResponse{})
 }
