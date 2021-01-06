@@ -68,6 +68,37 @@ type BuildDetails struct {
 	} `json:"downloads"`
 }
 
+func getVersionManifest(versionGroupDetailsURL string) (*VersionManifest, error) {
+	logrus.WithField("url", versionGroupDetailsURL).Debug("downloading versionManifest")
+	rsp, getErr := http.Get(versionGroupDetailsURL)
+	if getErr != nil {
+		logrus.WithError(getErr).Error("downloading versionGroupDetails failed")
+		return nil, getErr
+	}
+	logrus.WithField("contentLength", rsp.ContentLength).Trace("downloaded versionManifest")
+
+	logrus.Debug("reading versionManifest")
+	if rsp.Body != nil {
+		defer rsp.Body.Close()
+	}
+	body, readErr := ioutil.ReadAll(rsp.Body)
+	if readErr != nil {
+		logrus.WithError(readErr).Error("reading versionManifest failed")
+		return nil, readErr
+	}
+	logrus.WithField("body", rsp.Body).Trace("read versionManifest")
+
+	logrus.Debug("unmarshalling versionManifest")
+	versionManifest := &VersionManifest{}
+	jsonErr := json.Unmarshal(body, &versionManifest)
+	if jsonErr != nil {
+		logrus.WithError(jsonErr).Error("unmarshalling versionManifest failed")
+		return nil, jsonErr
+	}
+	logrus.WithField("versionManifest", versionManifest).Trace("unmarshalled versionManifest")
+	return versionManifest, nil
+}
+
 func getVersionGroupDetails(versionGroupDetailsURL string) (*VersionGroupDetails, error) {
 	logrus.WithField("url", versionGroupDetailsURL).Debug("downloading versionGroupDetails")
 	rsp, getErr := http.Get(versionGroupDetailsURL)

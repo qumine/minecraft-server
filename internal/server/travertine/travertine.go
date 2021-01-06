@@ -57,7 +57,11 @@ func (s *Server) Update() error {
 		}
 		version = versionGroupDetails.Versions[len(versionGroupDetails.Versions)-1]
 	} else if s.serverVersion == "latest" {
-		// TODO: Implement latest version resolver
+		versionManifest, err := getVersionManifest(s.papermcAPI)
+		if err != nil {
+			return err
+		}
+		version = versionManifest.Versions[len(versionManifest.Versions)-1]
 	} else {
 		return errors.New("Unsupported version")
 	}
