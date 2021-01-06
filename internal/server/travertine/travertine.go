@@ -57,7 +57,7 @@ func (s *Server) Update() error {
 		}
 		version = versionGroupDetails.Versions[len(versionGroupDetails.Versions)-1]
 	} else if s.serverVersion == "latest" {
-		versionManifest, err := getVersionManifest(s.papermcAPI)
+		versionManifest, err := getVersionManifest(s.travertineAPI)
 		if err != nil {
 			return err
 		}
