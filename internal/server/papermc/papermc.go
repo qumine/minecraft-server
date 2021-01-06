@@ -130,6 +130,26 @@ func (s *Server) Update() error {
 	return nil
 }
 
+// UpdatePlugins updates the plugins, if supported.
+func (s *Server) UpdatePlugins() error {
+	logrus.WithFields(logrus.Fields{
+		"type":        "PAPERMC",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"papermcAPI":  s.papermcAPI,
+	}).Debug("updating plugins")
+
+	common.UpdatePlugins()
+
+	logrus.WithFields(logrus.Fields{
+		"type":        "PAPERMC",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"papermcAPI":  s.papermcAPI,
+	}).Info("updated plugins")
+	return nil
+}
+
 // StartupCommand returns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
 	return "java", []string{"-jar", "papermc.jar", "nogui"}

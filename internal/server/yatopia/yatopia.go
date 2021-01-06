@@ -108,6 +108,26 @@ func (s *Server) Update() error {
 	return nil
 }
 
+// UpdatePlugins updates the plugins, if supported.
+func (s *Server) UpdatePlugins() error {
+	logrus.WithFields(logrus.Fields{
+		"type":        "YATOPIA",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"yatopiaApi":  s.yatopiaAPI,
+	}).Debug("updating plugins")
+
+	common.UpdatePlugins()
+
+	logrus.WithFields(logrus.Fields{
+		"type":        "YATOPIA",
+		"version":     s.serverVersion,
+		"forceUpdate": s.serverForceUpdate,
+		"yatopiaApi":  s.yatopiaAPI,
+	}).Info("updated plugins")
+	return nil
+}
+
 // StartupCommand returns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
 	return "java", []string{"-jar", "yatopia.jar", "nogui"}

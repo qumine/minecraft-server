@@ -31,6 +31,9 @@ var ServerCommand = &cli.Command{
 		if err := srv.Update(); err != nil {
 			logrus.WithError(err).Fatal("server updating failed")
 		}
+		if err := srv.UpdatePlugins(); err != nil {
+			logrus.WithError(err).Fatal("plugins updating failed")
+		}
 
 		w := wrapper.NewWrapper(srv)
 		a := api.NewAPI(w)

@@ -101,6 +101,17 @@ func (s *Server) Update() error {
 	return nil
 }
 
+// UpdatePlugins updates the plugins, if supported.
+func (s *Server) UpdatePlugins() error {
+	logrus.WithFields(logrus.Fields{
+		"type":          "TRAVERTINE",
+		"version":       s.serverVersion,
+		"forceUpdate":   s.serverForceUpdate,
+		"travertineAPI": s.travertineAPI,
+	}).Info("updating plugins failed, not supported by SERVER_TYPE")
+	return nil
+}
+
 // StartupCommand returns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
 	return "java", []string{"-jar", "travertine.jar", "nogui"}

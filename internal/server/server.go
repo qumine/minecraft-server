@@ -18,8 +18,10 @@ import (
 type Server interface {
 	// Configure configures the server.
 	Configure() error
-	// Update updates the resource, if supported uses cache.
+	// Update updates the server, if supported uses cache.
 	Update() error
+	// UpdatePlugins updates the plugins, if supported.
+	UpdatePlugins() error
 	// StartupCommand returns the command and arguments used to startup the server.
 	StartupCommand() (string, []string)
 }

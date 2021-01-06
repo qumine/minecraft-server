@@ -13,7 +13,7 @@ Docker Image for running minecraft servers.
 - [X] Basic updating of server JAR.
 - [X] Basic wrapping of JVM process.
 - [X] Basic API health endpoints.
-- [ ] Basic download of server plugins.
+- [X] Basic download of server plugins.
 - [ ] Basic updating of server plugins.
 - [X] GRPC API for controlling the server remotely(start, stop, ).
 - [X] GRPC API for log streaming.
@@ -137,8 +137,11 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATO
 
 ## Plugins
 
+To automatically download plugins and keep them updated you can use the SERVER_PLUGINS environment variable.
+
+***Currently only HTTP and HTTP/S plugins sources are supported***
 ```
-W.I.P
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest -e SERVER_PLUGINS="https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v1.3.0-snap/BlueMap-1.3.0-snap-spigot.jar,https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/bukkit/target/floodgate-bukkit.jar" qumine/qumine-server-java:latest
 ```
 
 # Deployment
