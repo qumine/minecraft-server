@@ -8,6 +8,6 @@ require (
 	github.com/rivo/tview v0.0.0-20201204190810-5406288b8e4e
 	github.com/sirupsen/logrus v1.7.0
 	github.com/urfave/cli/v2 v2.3.0
-	google.golang.org/grpc v1.34.0
+	google.golang.org/grpc v1.34.1
 	google.golang.org/protobuf v1.25.0
 )
