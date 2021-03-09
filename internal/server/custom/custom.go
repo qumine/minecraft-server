@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/qumine/qumine-server-java/internal/server/common"
-	"github.com/qumine/qumine-server-java/internal/utils"
+	"github.com/qumine/minecraft-server/internal/server/common"
+	"github.com/qumine/minecraft-server/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 

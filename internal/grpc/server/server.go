@@ -5,9 +5,9 @@ import (
 	"net"
 	"sync"
 
-	qugrpc "github.com/qumine/qumine-server-java/internal/grpc"
-	"github.com/qumine/qumine-server-java/internal/utils"
-	"github.com/qumine/qumine-server-java/internal/wrapper"
+	qugrpc "github.com/qumine/minecraft-server/internal/grpc"
+	"github.com/qumine/minecraft-server/internal/utils"
+	"github.com/qumine/minecraft-server/internal/wrapper"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

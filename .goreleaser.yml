@@ -1,8 +1,8 @@
-project_name: qumine-server-java
+project_name: minecraft-server
 release:
   github:
     owner: qumine
-    name: qumine-server-java
+    name: minecraft-server
   prerelease: auto
 before:
   hooks:
@@ -16,8 +16,8 @@ builds:
   goarm:
   - 6
   - 7
-  main: ./cmd/qumine-server-java
-  binary: qumine-server-java
+  main: ./cmd/minecraft-server
+  binary: minecraft-server
   env:
   - CGO_ENABLED=0
 archives:
@@ -35,49 +35,49 @@ snapshot:
 dockers:
 - dockerfile: build/package/Dockerfile
   image_templates:
-  - "qumine/qumine-server-java:latest-amd64"
-  - "qumine/qumine-server-java:{{.Tag}}-amd64"
+  - "qumine/minecraft-server:latest-amd64"
+  - "qumine/minecraft-server:{{.Tag}}-amd64"
   goos: linux
   goarch: amd64
   binaries:
-  - qumine-server-java
+  - minecraft-server
   build_flag_templates:
   - "--build-arg=ARCH=amd64/"
   - "--label=org.opencontainers.image.title={{ .ProjectName }}"
   - "--label=org.opencontainers.image.description={{ .ProjectName }}"
-  - "--label=org.opencontainers.image.url=https://github.com/qumine/qumine-server-java"
-  - "--label=org.opencontainers.image.source=https://github.com/qumine/qumine-server-java"
+  - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
+  - "--label=org.opencontainers.image.source=https://github.com/qumine/minecraft-server"
   - "--label=org.opencontainers.image.version={{ .Version }}"
   - "--label=org.opencontainers.image.created={{.Date}}"
   - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
   - "--label=org.opencontainers.image.licenses=AGPL-3.0"
 - dockerfile: build/package/Dockerfile
   image_templates:
-  - "qumine/qumine-server-java:latest-arm64v8"
-  - "qumine/qumine-server-java:{{.Tag}}-arm64v8"
+  - "qumine/minecraft-server:latest-arm64v8"
+  - "qumine/minecraft-server:{{.Tag}}-arm64v8"
   goos: linux
   goarch: arm64
   binaries:
-  - qumine-server-java
+  - minecraft-server
   build_flag_templates:
   - "--build-arg=ARCH=arm64v8/"
   - "--label=org.opencontainers.image.title={{ .ProjectName }}"
   - "--label=org.opencontainers.image.description={{ .ProjectName }}"
-  - "--label=org.opencontainers.image.url=https://github.com/qumine/qumine-server-java"
-  - "--label=org.opencontainers.image.source=https://github.com/qumine/qumine-server-java"
+  - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
+  - "--label=org.opencontainers.image.source=https://github.com/qumine/minecraft-server"
   - "--label=org.opencontainers.image.version={{ .Version }}"
   - "--label=org.opencontainers.image.created={{.Date}}"
   - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
   - "--label=org.opencontainers.image.licenses=AGPL-3.0"
 docker_manifests:
-- name_template: qumine/qumine-server-java:latest
+- name_template: qumine/minecraft-server:latest
   image_templates:
-  - qumine/qumine-server-java:latest-amd64
-  - qumine/qumine-server-java:latest-arm64v8
-- name_template: qumine/qumine-server-java:{{.Tag}}
+  - qumine/minecraft-server:latest-amd64
+  - qumine/minecraft-server:latest-arm64v8
+- name_template: qumine/minecraft-server:{{.Tag}}
   image_templates:
-  - qumine/qumine-server-java:{{.Tag}}-amd64
-  - qumine/qumine-server-java:{{.Tag}}-arm64v8
+  - qumine/minecraft-server:{{.Tag}}-amd64
+  - qumine/minecraft-server:{{.Tag}}-arm64v8
 changelog:
   filters:
     exclude:

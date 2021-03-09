@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/qumine/qumine-server-java/internal/utils"
-	"github.com/qumine/qumine-server-java/internal/wrapper"
+	"github.com/qumine/minecraft-server/internal/utils"
+	"github.com/qumine/minecraft-server/internal/wrapper"
 	"github.com/sirupsen/logrus"
 )
 

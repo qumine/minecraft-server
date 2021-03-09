@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	qugrpc "github.com/qumine/qumine-server-java/internal/grpc"
-	"github.com/qumine/qumine-server-java/internal/utils"
+	qugrpc "github.com/qumine/minecraft-server/internal/grpc"
+	"github.com/qumine/minecraft-server/internal/utils"
 	"github.com/rivo/tview"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"

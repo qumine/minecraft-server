@@ -1,9 +1,9 @@
 QuMine - Server - Java
 ---
-![GitHub Release](https://img.shields.io/github/v/release/qumine/qumine-server-java)
-![GitHub Workflow](https://img.shields.io/github/workflow/status/qumine/qumine-server-java/release)
-[![GoDoc](https://godoc.org/github.com/qumine/qumine-server-java?status.svg)](https://godoc.org/github.com/qumine/qumine-server-java)
-[![Go Report Card](https://goreportcard.com/badge/github.com/qumine/qumine-server-java)](https://goreportcard.com/report/github.com/qumine/qumine-server-java)
+![GitHub Release](https://img.shields.io/github/v/release/qumine/minecraft-server)
+![GitHub Workflow](https://img.shields.io/github/workflow/status/qumine/minecraft-server/release)
+[![GoDoc](https://godoc.org/github.com/qumine/minecraft-server?status.svg)](https://godoc.org/github.com/qumine/minecraft-server)
+[![Go Report Card](https://goreportcard.com/badge/github.com/qumine/minecraft-server)](https://goreportcard.com/report/github.com/qumine/minecraft-server)
 
 Docker Image for running minecraft servers.
 
@@ -25,7 +25,7 @@ Docker Image for running minecraft servers.
 ## Quick Start
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA qumine/minecraft-server:latest
 ```
 
 ## Accessing the server console
@@ -88,25 +88,25 @@ SERVER_OPS_OVERRIDE=true
 
 In custom mode by default the provided url will be downloaded and later executed with the java -jar command.
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download qumine/minecraft-server:latest
 ```
 
 If you need to customize the startup command of your server you can use the SERVER_CUSTOM_COMMAND and SERVER_CUSTOM_ARGS environment variables.
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download -e SERVER_CUSTOM_COMMAND=java -e SERVER_CUSTOM_ARGS="-XX:+UseG1GC,-jar,download,nogui" qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=CUSTOM -e SERVER_CUSTOM_URL=https://papermc.io/api/v1/paper/1.16.4/296/download -e SERVER_CUSTOM_COMMAND=java -e SERVER_CUSTOM_ARGS="-XX:+UseG1GC,-jar,download,nogui" qumine/minecraft-server:latest
 ```
 
 ### PaperMC
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/minecraft-server:latest
 ```
 
 ### ServerStarter
 
 This will configure the server using [ServerStarter](https://github.com/Yoosk/ServerStarter).
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest qumine/minecraft-server:latest
 ```
 
 **NOTE:** The amount of memory must fit the minRam and maxRam options of the server-setup-config.yaml.
@@ -114,25 +114,25 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPE
 ### Travertine
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=TRAVERTINE -e SERVER_VERSION=latest qumine/minecraft-server:latest
 ```
 
 ### Vanilla
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANILLA -e SERVER_VERSION=1.16.4 qumine/minecraft-server:latest
 ```
 
 ### Waterfall
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/minecraft-server:latest
 ```
 
 ### Yatopia
 
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/minecraft-server:latest
 ```
 
 ## Plugins
@@ -141,7 +141,7 @@ To automatically download plugins and keep them updated you can use the SERVER_P
 
 ***Currently only HTTP and HTTP/S plugins sources are supported***
 ```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest -e SERVER_PLUGINS="https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v1.3.0-snap/BlueMap-1.3.0-snap-spigot.jar,https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/bukkit/target/floodgate-bukkit.jar" qumine/qumine-server-java:latest
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest -e SERVER_PLUGINS="https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v1.3.0-snap/BlueMap-1.3.0-snap-spigot.jar,https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/bukkit/target/floodgate-bukkit.jar" qumine/minecraft-server:latest
 ```
 
 # Deployment

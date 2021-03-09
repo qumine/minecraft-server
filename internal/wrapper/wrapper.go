@@ -5,8 +5,8 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/qumine/qumine-server-java/internal/server"
-	"github.com/qumine/qumine-server-java/internal/wrapper/console"
+	"github.com/qumine/minecraft-server/internal/server"
+	"github.com/qumine/minecraft-server/internal/wrapper/console"
 )
 
 // Wrapper represents the wrapper object of the minecraft server

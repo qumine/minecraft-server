@@ -2,7 +2,7 @@ package main
 
 import (
 	tcell "github.com/gdamore/tcell/v2"
-	"github.com/qumine/qumine-server-java/internal/grpc/client"
+	"github.com/qumine/minecraft-server/internal/grpc/client"
 	"github.com/rivo/tview"
 	"github.com/urfave/cli/v2"
 )

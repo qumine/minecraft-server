@@ -5,13 +5,13 @@ import (
 	"os"
 	"strings"
 
-	"github.com/qumine/qumine-server-java/internal/server/custom"
-	"github.com/qumine/qumine-server-java/internal/server/papermc"
-	"github.com/qumine/qumine-server-java/internal/server/starter"
-	"github.com/qumine/qumine-server-java/internal/server/travertine"
-	"github.com/qumine/qumine-server-java/internal/server/vanilla"
-	"github.com/qumine/qumine-server-java/internal/server/waterfall"
-	"github.com/qumine/qumine-server-java/internal/server/yatopia"
+	"github.com/qumine/minecraft-server/internal/server/custom"
+	"github.com/qumine/minecraft-server/internal/server/papermc"
+	"github.com/qumine/minecraft-server/internal/server/starter"
+	"github.com/qumine/minecraft-server/internal/server/travertine"
+	"github.com/qumine/minecraft-server/internal/server/vanilla"
+	"github.com/qumine/minecraft-server/internal/server/waterfall"
+	"github.com/qumine/minecraft-server/internal/server/yatopia"
 )
 
 // Server is the interface for servers.

@@ -4,7 +4,7 @@ FROM ${ARCH}openjdk:11-jre-slim
 VOLUME /data
 EXPOSE 8080 25565
 
-COPY qumine-server-java /usr/local/bin/qumine-server
+COPY minecraft-server /usr/local/bin/qumine-server
 
 RUN apt update \
 && apt install -y unzip wget \

@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/qumine/qumine-server-java/internal/utils"
+	"github.com/qumine/minecraft-server/internal/utils"
 	"github.com/sirupsen/logrus"
 )
 

@@ -7,10 +7,10 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/qumine/qumine-server-java/internal/api"
-	grpc "github.com/qumine/qumine-server-java/internal/grpc/server"
-	"github.com/qumine/qumine-server-java/internal/server"
-	"github.com/qumine/qumine-server-java/internal/wrapper"
+	"github.com/qumine/minecraft-server/internal/api"
+	grpc "github.com/qumine/minecraft-server/internal/grpc/server"
+	"github.com/qumine/minecraft-server/internal/server"
+	"github.com/qumine/minecraft-server/internal/wrapper"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 )

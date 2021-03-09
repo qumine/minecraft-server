@@ -1,4 +1,4 @@
-module github.com/qumine/qumine-server-java
+module github.com/qumine/minecraft-server
 
 go 1.16
 
