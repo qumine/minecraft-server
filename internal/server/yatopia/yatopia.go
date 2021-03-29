@@ -110,20 +110,19 @@ func (s *Server) Update() error {
 
 // UpdatePlugins updates the plugins, if supported.
 func (s *Server) UpdatePlugins() error {
+	plugins := utils.GetEnvStringList("SERVER_PLUGINS", "")
 	logrus.WithFields(logrus.Fields{
-		"type":        "YATOPIA",
-		"version":     s.serverVersion,
-		"forceUpdate": s.serverForceUpdate,
-		"yatopiaApi":  s.yatopiaAPI,
+		"type":    "YATOPIA",
+		"version": s.serverVersion,
+		"plugins": plugins,
 	}).Debug("updating plugins")
 
-	common.UpdatePlugins()
+	common.UpdatePlugins(plugins)
 
 	logrus.WithFields(logrus.Fields{
-		"type":        "YATOPIA",
-		"version":     s.serverVersion,
-		"forceUpdate": s.serverForceUpdate,
-		"yatopiaApi":  s.yatopiaAPI,
+		"type":    "YATOPIA",
+		"version": s.serverVersion,
+		"plugins": plugins,
 	}).Info("updated plugins")
 	return nil
 }

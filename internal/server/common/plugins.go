@@ -13,9 +13,8 @@ const (
 )
 
 // UpdatePlugins updates the plugins provided with SERVER_PLUGINS, currently only supports bukkit based plugins.
-func UpdatePlugins() {
+func UpdatePlugins(plugins []string) {
 	os.MkdirAll(pluginsPath, 0777)
-	plugins := utils.GetEnvStringList("SERVER_PLUGINS", "")
 	for _, plugin := range plugins {
 		if strings.HasPrefix(plugin, "http://") || strings.HasPrefix(plugin, "https://") {
 			updatePluginFromURL(plugin)

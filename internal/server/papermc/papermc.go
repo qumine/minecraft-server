@@ -136,20 +136,19 @@ func (s *Server) Update() error {
 
 // UpdatePlugins updates the plugins, if supported.
 func (s *Server) UpdatePlugins() error {
+	plugins := utils.GetEnvStringList("SERVER_PLUGINS", "")
 	logrus.WithFields(logrus.Fields{
-		"type":        "PAPERMC",
-		"version":     s.serverVersion,
-		"forceUpdate": s.serverForceUpdate,
-		"papermcAPI":  s.papermcAPI,
+		"type":    "PAPERMC",
+		"version": s.serverVersion,
+		"plugins": plugins,
 	}).Debug("updating plugins")
 
-	common.UpdatePlugins()
+	common.UpdatePlugins(plugins)
 
 	logrus.WithFields(logrus.Fields{
-		"type":        "PAPERMC",
-		"version":     s.serverVersion,
-		"forceUpdate": s.serverForceUpdate,
-		"papermcAPI":  s.papermcAPI,
+		"type":    "PAPERMC",
+		"version": s.serverVersion,
+		"plugins": plugins,
 	}).Info("updated plugins")
 	return nil
 }
