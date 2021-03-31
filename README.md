@@ -148,20 +148,98 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPE
 
 ## Operator
 
-```
-TODO
-```
+**W.I.P**: An operator based approach for managing Minecraft Servers inside of kubernetes will follow in the future.
 
 ## Docker
 
 ```
-TODO
+docker run -it --rm -p 8080:8080 -p 25565:25565 \
+  -e EULA=true \
+  -e SERVER_TYPE=VANILLA \
+  -e SERVER_VERSION=1.16.4 \
+  -e SERVER_WHITE_LIST=User1,User2 \
+  -e SERVER_OPS=User1,User2 \
+  -e SERVER_PROPERTIES_MOTD="Example Minecraft Server" \
+  qumine/minecraft-server:latest
 ```
 
 ## Kubernetes
 
 ```
-TODO
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: example-minecraft-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: minecraft-server
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: example-minecraft-server
+    spec:
+      containers:
+      - env:
+        - name: EULA
+          value: "true"
+        - name: SERVER_TYPE
+          value: VANILLA
+        - name: SERVER_VERSION
+          value: 1.16.4
+        - name: SERVER_WHITE_LIST
+          value: User1,User2
+        - name: SERVER_OPS
+          value: User1,User2
+        - name: SERVER_PROPERTIES_MOTD
+          value: Example Minecraft Server
+        image: docker.io/qumine/minecraft-server:v0.1.1
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health/live
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: minecraft-server
+        ports:
+        - containerPort: 25565
+          name: minecraft
+          protocol: TCP
+        - containerPort: 8080
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 5
+          httpGet:
+            path: /health/ready
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: "2"
+            memory: 4000Mi
+          requests:
+            cpu: "2"
+            memory: 4000Mi
+        startupProbe:
+          failureThreshold: 24
+          httpGet:
+            path: /health/ready
+            port: 8080
+            scheme: HTTP
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 1
 ```
 
 ## Helm
