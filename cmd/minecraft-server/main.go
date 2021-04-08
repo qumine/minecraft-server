@@ -11,13 +11,7 @@ import (
 
 var (
 	version = "dev"
-	commit  = "none"
 	date    = "uknown"
-)
-
-var (
-	helpFlag    bool
-	versionFlag bool
 )
 
 func main() {

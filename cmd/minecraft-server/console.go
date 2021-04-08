@@ -15,15 +15,9 @@ var ConsoleCommand = &cli.Command{
 	Action: func(c *cli.Context) error {
 		client := client.NewClient()
 
-		cout := newConsoleOutput()
-		cin := newConsoleInput(client)
 		app := tview.NewApplication()
-		app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-			if event.Key() == tcell.KeyCtrlC {
-				client.Stop(app, cout)
-			}
-			return event
-		})
+		cout := newConsoleOutput()
+		cin := newConsoleInput(app, client, cout)
 		app.SetRoot(tview.NewFlex().
 			SetDirection(tview.FlexRow).
 			AddItem(cout, 0, 1, false).
@@ -34,16 +28,19 @@ var ConsoleCommand = &cli.Command{
 	},
 }
 
-func newLayout() *tview.Flex {
-	return tview.NewFlex()
-}
-
 func newConsoleOutput() *tview.TextView {
 	return tview.NewTextView()
 }
 
-func newConsoleInput(client *client.GRPCClient) *tview.InputField {
+func newConsoleInput(app *tview.Application, client *client.GRPCClient, cout *tview.TextView) *tview.InputField {
 	in := tview.NewInputField()
+	in.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		if event.Key() == tcell.KeyCtrlC {
+			client.Stop(app, cout)
+			app.Stop()
+		}
+		return event
+	})
 	return in.
 		SetDoneFunc(func(key tcell.Key) {
 			client.Send(in.GetText())
