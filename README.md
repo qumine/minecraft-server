@@ -129,12 +129,6 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANI
 docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/minecraft-server:latest
 ```
 
-### Yatopia
-
-```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=YATOPIA -e SERVER_VERSION=latest qumine/minecraft-server:latest
-```
-
 ## Plugins
 
 To automatically download plugins and keep them updated you can use the SERVER_PLUGINS environment variable.

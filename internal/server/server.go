@@ -11,7 +11,6 @@ import (
 	"github.com/qumine/minecraft-server/internal/server/travertine"
 	"github.com/qumine/minecraft-server/internal/server/vanilla"
 	"github.com/qumine/minecraft-server/internal/server/waterfall"
-	"github.com/qumine/minecraft-server/internal/server/yatopia"
 )
 
 // Server is the interface for servers.
@@ -41,8 +40,6 @@ func NewServer() (Server, error) {
 		return vanilla.NewVanillaServer(), nil
 	case "WATERFALL":
 		return waterfall.NewWaterfallServer(), nil
-	case "YATOPIA":
-		return yatopia.NewYatopiaServer(), nil
 	default:
 		return nil, fmt.Errorf("serverType(%s) not supported", strings.ToUpper(os.Getenv("SERVER_TYPE")))
 	}
