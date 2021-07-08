@@ -1,5 +1,4 @@
-ARG ARCH=
-FROM ${ARCH}openjdk:11-jre-slim
+FROM adoptopenjdk/openjdk16:debianslim-jre
 
 VOLUME /data
 EXPOSE 8080 25565
