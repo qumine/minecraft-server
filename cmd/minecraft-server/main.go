@@ -55,7 +55,7 @@ func main() {
 				Email: "cedric@qumine.io",
 			},
 		},
-		Copyright:              "(c) 2020 QuMine",
+		Copyright:              "(c) 2021 QuMine",
 		UseShortOptionHandling: true,
 	}
 
