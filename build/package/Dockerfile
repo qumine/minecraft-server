@@ -1,4 +1,5 @@
-FROM adoptopenjdk/openjdk16:debianslim-jre
+ARG ARCH=
+FROM ${ARCH}adoptopenjdk:16-jre-hotspot
 
 VOLUME /data
 EXPOSE 8080 25565
