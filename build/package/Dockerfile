@@ -1,5 +1,5 @@
 ARG ARCH=
-FROM ${ARCH}adoptopenjdk:16-jre-hotspot
+FROM ${ARCH}openjdk:16-slim-buster
 
 VOLUME /data
 EXPOSE 8080 25565
