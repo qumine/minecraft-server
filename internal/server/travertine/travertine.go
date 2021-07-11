@@ -118,5 +118,5 @@ func (s *Server) UpdatePlugins() error {
 
 // StartupCommand returns the command and arguments used to startup the server.
 func (s *Server) StartupCommand() (string, []string) {
-	return "java", []string{"-jar", "travertine.jar", "nogui"}
+	return "java", common.ServerFlags("travertine.jar")
 }

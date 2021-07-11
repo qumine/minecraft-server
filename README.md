@@ -82,6 +82,14 @@ You can force the ops.json to be overriden every time the container starts up by
 SERVER_OPS_OVERRIDE=true
 ```
 
+## AIKAR flags
+
+You can use AIKAR's optimized flags for better server performance with certain use cases.
+
+```
+USE_AIKAR_FLAGS=true
+```
+
 ## Server Types
 
 ### Custom
