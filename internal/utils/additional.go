@@ -14,7 +14,7 @@ func DownloadAdditionalFiles() error {
 		"additionalFiles": additionalFiles,
 	}).Debug("downloading additonal files")
 
-	if len(additionalFiles) == 0 {
+	if len(additionalFiles) <= 1 && additionalFiles[0] == "" {
 		logrus.WithFields(logrus.Fields{
 			"additionalFiles": additionalFiles,
 		}).Info("downloading additonal files skipped")
