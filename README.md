@@ -90,6 +90,26 @@ You can use AIKAR's optimized flags for better server performance with certain u
 USE_AIKAR_FLAGS=true
 ```
 
+## Additional files
+
+To automatically download and extract additional files you can use the ADDITIONAL_FILES environment variable.
+
+***Currently only HTTP and HTTP/S sources are supported***
+***Currently only ZIP sources are supported***
+
+```
+ADDITIONAL_FILES="https://example.com/file.zip,https://example.com/file2.zip"
+```
+
+## Plugins
+
+To automatically download plugins and keep them updated you can use the SERVER_PLUGINS environment variable.
+
+***Currently only HTTP and HTTP/S plugins sources are supported***
+```
+docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest -e SERVER_PLUGINS="https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v1.3.0-snap/BlueMap-1.3.0-snap-spigot.jar,https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/bukkit/target/floodgate-bukkit.jar" qumine/minecraft-server:latest
+```
+
 ## Server Types
 
 ### Custom
@@ -135,15 +155,6 @@ docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=VANI
 
 ```
 docker run -it --rm -p 8080:8080 -p 25565:25577 -e SERVER_TYPE=WATERFALL -e SERVER_VERSION=latest qumine/minecraft-server:latest
-```
-
-## Plugins
-
-To automatically download plugins and keep them updated you can use the SERVER_PLUGINS environment variable.
-
-***Currently only HTTP and HTTP/S plugins sources are supported***
-```
-docker run -it --rm -p 8080:8080 -p 25565:25565 -e EULA=true -e SERVER_TYPE=PAPERMC -e SERVER_VERSION=latest -e SERVER_PLUGINS="https://github.com/BlueMap-Minecraft/BlueMap/releases/download/v1.3.0-snap/BlueMap-1.3.0-snap-spigot.jar,https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/bukkit/target/floodgate-bukkit.jar" qumine/minecraft-server:latest
 ```
 
 # Deployment

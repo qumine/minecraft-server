@@ -10,6 +10,7 @@ import (
 	"github.com/qumine/minecraft-server/internal/api"
 	grpc "github.com/qumine/minecraft-server/internal/grpc/server"
 	"github.com/qumine/minecraft-server/internal/server"
+	"github.com/qumine/minecraft-server/internal/utils"
 	"github.com/qumine/minecraft-server/internal/wrapper"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
@@ -33,6 +34,9 @@ var ServerCommand = &cli.Command{
 		}
 		if err := srv.UpdatePlugins(); err != nil {
 			logrus.WithError(err).Fatal("plugins updating failed")
+		}
+		if err := utils.DownloadAdditionalFiles(); err != nil {
+			logrus.WithError(err).Fatal("downloading additional files failed")
 		}
 
 		w := wrapper.NewWrapper(srv)
