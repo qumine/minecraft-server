@@ -1,13 +1,13 @@
 ARG ARCH=
-FROM ${ARCH}openjdk:16-slim-buster
+FROM ${ARCH}openjdk:17-oraclelinux8
 
 VOLUME /data
 EXPOSE 8080 25565
 
 COPY minecraft-server /usr/local/bin/qumine-server
 
-RUN apt update \
-&& apt install -y unzip wget \
+RUN microdnf update \
+&& microdnf install unzip \
 && groupadd -g 4242 -r qumine \
 && useradd -g 4242 -m -N -r -u 4242 qumine \
 # Tempfix for fabric installer
