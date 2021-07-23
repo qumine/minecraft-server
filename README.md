@@ -4,6 +4,7 @@ QuMine - Server - Java
 ![GitHub Workflow](https://img.shields.io/github/workflow/status/qumine/minecraft-server/release)
 [![GoDoc](https://godoc.org/github.com/qumine/minecraft-server?status.svg)](https://godoc.org/github.com/qumine/minecraft-server)
 [![Go Report Card](https://goreportcard.com/badge/github.com/qumine/minecraft-server)](https://goreportcard.com/report/github.com/qumine/minecraft-server)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=qumine_minecraft-server&metric=alert_status)](https://sonarcloud.io/dashboard?id=qumine_minecraft-server)
 
 Docker Image for running minecraft servers.
 
