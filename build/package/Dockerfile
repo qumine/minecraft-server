@@ -1,5 +1,5 @@
 ARG ARCH=
-FROM ${ARCH}openjdk:17-oraclelinux8
+FROM ${ARCH}openjdk:16-oraclelinux8
 
 VOLUME /data
 EXPOSE 8080 25565
