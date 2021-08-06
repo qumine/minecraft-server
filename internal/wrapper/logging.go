@@ -1,7 +1,7 @@
 package wrapper
 
 func (w *Wrapper) onLog(line string) {
-	for status, reg := range logToStatus {
+	for reg, status := range logToStatus {
 		if reg.MatchString(line) {
 			w.Status = status
 		}

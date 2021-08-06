@@ -9,10 +9,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var logToStatus = map[string]*regexp.Regexp{
-	"Starting": regexp.MustCompile(`Starting minecraft server version (.*)`),
-	"Started":  regexp.MustCompile(`Done (?s)(.*)! For help, type "help"`),
-	"Stopping": regexp.MustCompile(`Stopping (.*) server`),
+var logToStatus = map[*regexp.Regexp]string{
+	// Vanilla based servers.
+	regexp.MustCompile(`Starting minecraft server version (.*)`): "Starting",
+	regexp.MustCompile(`Done (?s)(.*)! For help, type "help"`):   "Started",
+	regexp.MustCompile(`Stopping (.*) server`):                   "Stopping",
+
+	// Bungee based servers.
+	regexp.MustCompile(`Listening on .*`):     "Started",
+	regexp.MustCompile(`Closing listener .*`): "Stopping",
 	// Closing Server
 }
 

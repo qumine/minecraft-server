@@ -7,7 +7,7 @@ EXPOSE 8080 25565
 COPY minecraft-server /usr/local/bin/qumine-server
 
 RUN microdnf update \
-&& microdnf install unzip \
+&& microdnf install unzip nano \
 && groupadd -g 4242 -r qumine \
 && useradd -g 4242 -m -N -r -u 4242 qumine \
 # Tempfix for fabric installer
