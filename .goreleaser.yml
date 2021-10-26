@@ -8,7 +8,8 @@ before:
   hooks:
   - go mod download
 builds:
-- goos:
+- id: ""
+  goos:
   - linux
   goarch:
   - amd64
@@ -39,7 +40,7 @@ dockers:
   - "qumine/minecraft-server:{{.Tag}}-amd64"
   goos: linux
   goarch: amd64
-  binaries:
+  ids:
   - minecraft-server
   build_flag_templates:
   - "--build-arg=ARCH=amd64/"
@@ -57,7 +58,43 @@ dockers:
   - "qumine/minecraft-server:{{.Tag}}-arm64v8"
   goos: linux
   goarch: arm64
-  binaries:
+  ids:
+  - minecraft-server
+  build_flag_templates:
+  - "--build-arg=ARCH=arm64v8/"
+  - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+  - "--label=org.opencontainers.image.description={{ .ProjectName }}"
+  - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
+  - "--label=org.opencontainers.image.source=https://github.com/qumine/minecraft-server"
+  - "--label=org.opencontainers.image.version={{ .Version }}"
+  - "--label=org.opencontainers.image.created={{.Date}}"
+  - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+  - "--label=org.opencontainers.image.licenses=AGPL-3.0"
+- dockerfile: build/package/Dockerfile.jdk8
+  image_templates:
+  - "qumine/minecraft-server:latest-jdk8-amd64"
+  - "qumine/minecraft-server:{{.Tag}}-jdk8-amd64"
+  goos: linux
+  goarch: amd64
+  ids:
+  - minecraft-server
+  build_flag_templates:
+  - "--build-arg=ARCH=amd64/"
+  - "--label=org.opencontainers.image.title={{ .ProjectName }}"
+  - "--label=org.opencontainers.image.description={{ .ProjectName }}"
+  - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
+  - "--label=org.opencontainers.image.source=https://github.com/qumine/minecraft-server"
+  - "--label=org.opencontainers.image.version={{ .Version }}"
+  - "--label=org.opencontainers.image.created={{.Date}}"
+  - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
+  - "--label=org.opencontainers.image.licenses=AGPL-3.0"
+- dockerfile: build/package/Dockerfile.jdk8
+  image_templates:
+  - "qumine/minecraft-server:latest-jdk8-arm64v8"
+  - "qumine/minecraft-server:{{.Tag}}-jdk8-arm64v8"
+  goos: linux
+  goarch: arm64
+  ids:
   - minecraft-server
   build_flag_templates:
   - "--build-arg=ARCH=arm64v8/"
@@ -78,6 +115,14 @@ docker_manifests:
   image_templates:
   - qumine/minecraft-server:{{.Tag}}-amd64
   - qumine/minecraft-server:{{.Tag}}-arm64v8
+- name_template: qumine/minecraft-server:latest-jdk8
+  image_templates:
+  - qumine/minecraft-server:latest-jdk8-amd64
+  - qumine/minecraft-server:latest-jdk8-arm64v8
+- name_template: qumine/minecraft-server:{{.Tag}}-jdk8
+  image_templates:
+  - qumine/minecraft-server:{{.Tag}}-jdk8-amd64
+  - qumine/minecraft-server:{{.Tag}}-jdk8-arm64v8
 changelog:
   filters:
     exclude:
