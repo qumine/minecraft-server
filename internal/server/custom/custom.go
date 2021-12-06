@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/artdarek/go-unzip/pkg/unzip"
 	"github.com/qumine/minecraft-server/internal/server/common"
 	"github.com/qumine/minecraft-server/internal/utils"
 	"github.com/sirupsen/logrus"
@@ -64,6 +65,11 @@ func (s *Server) Update() error {
 	s.filename = parts[len(parts)-1]
 	if err := utils.DownloadToFile(s.customURL, s.filename); err != nil {
 		return err
+	}
+	if strings.HasSuffix(s.filename, ".zip") {
+		if _, err := unzip.New().Extract(s.filename, "."); err != nil {
+			return err
+		}
 	}
 
 	logrus.WithFields(logrus.Fields{
