@@ -54,13 +54,9 @@ func (s *GRPCServer) Start(ctx context.Context, wg *sync.WaitGroup) {
 	logrus.WithFields(logrus.Fields{
 		"addr": s.Addr,
 	}).Info("started grpc")
-	for {
-		select {
-		case <-ctx.Done():
-			s.Stop(wg)
-			return
-		}
-	}
+
+	<-ctx.Done()
+	s.Stop(wg)
 }
 
 // Stop the api
@@ -84,13 +80,10 @@ func (s *GRPCServer) StreamLogs(req *qugrpc.LogStreamRequest, srv qugrpc.QuMineS
 			Line: line,
 		})
 	})
-	for {
-		select {
-		case <-srv.Context().Done():
-			s.Wrapper.Console.Unsubscribe("client")
-			return nil
-		}
-	}
+
+	<-srv.Context().Done()
+	s.Wrapper.Console.Unsubscribe("client")
+	return nil
 }
 
 // SendCommand sends a command to the minecraft server

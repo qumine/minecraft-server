@@ -24,13 +24,8 @@ func (w *Wrapper) Stop(wg *sync.WaitGroup) {
 }
 
 func (w *Wrapper) stopWatchdog(ctx context.Context, wg *sync.WaitGroup) {
-	for {
-		select {
-		case <-ctx.Done():
-			w.cmd.Process.Kill()
-			return
-		}
-	}
+	<-ctx.Done()
+	w.cmd.Process.Kill()
 }
 
 func (w *Wrapper) stopWrapper(cancel context.CancelFunc, wg *sync.WaitGroup) {

@@ -29,7 +29,7 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 	}).Debug("starting wrapper")
 	wg.Add(1)
 
-	go w.startConsole()
+	go w.startConsole(ctx)
 	go w.startCommand()
 	go w.startWatchdog()
 
@@ -37,18 +37,14 @@ func (w *Wrapper) Start(ctx context.Context, wg *sync.WaitGroup) {
 		"path": w.cmd.Path,
 		"args": w.cmd.Args,
 	}).Info("started wrapper")
-	for {
-		select {
-		case <-ctx.Done():
-			w.Stop(wg)
-			return
-		}
-	}
+
+	<-ctx.Done()
+	w.Stop(wg)
 }
 
-func (w *Wrapper) startConsole() {
+func (w *Wrapper) startConsole(ctx context.Context) {
 	w.Console.Subscribe("wrapper", w.onLog)
-	w.Console.Start()
+	w.Console.Start(ctx)
 }
 
 func (w *Wrapper) startCommand() {

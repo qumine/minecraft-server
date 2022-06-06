@@ -2,17 +2,16 @@ package console
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"io"
 )
 
 // Start will start the console, it will follow the logs
-func (c *Console) Start() {
+func (c *Console) Start(ctx context.Context) {
 	go c.startStderr()
 	go c.startStdout()
-
-	for {
-	}
+	<-ctx.Done()
 }
 
 func (c *Console) startStderr() {

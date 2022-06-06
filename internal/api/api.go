@@ -54,13 +54,9 @@ func (a *API) Start(ctx context.Context, wg *sync.WaitGroup) {
 	logrus.WithFields(logrus.Fields{
 		"addr": a.httpServer.Addr,
 	}).Info("started api")
-	for {
-		select {
-		case <-ctx.Done():
-			a.Stop(wg)
-			return
-		}
-	}
+
+	<-ctx.Done()
+	a.Stop(wg)
 }
 
 // Stop the api
