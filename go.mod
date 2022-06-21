@@ -8,13 +8,13 @@ require (
 	github.com/magiconair/properties v1.8.6
 	github.com/rivo/tview v0.0.0-20201204190810-5406288b8e4e
 	github.com/sirupsen/logrus v1.8.1
-	github.com/urfave/cli/v2 v2.10.1
+	github.com/urfave/cli/v2 v2.10.2
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0
 )
 
 require (
-	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
+	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/gdamore/encoding v1.0.0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/lucasb-eyer/go-colorful v1.0.3 // indirect
