@@ -1,6 +1,6 @@
 module github.com/qumine/minecraft-server
 
-go 1.18
+go 1.19
 
 require (
 	github.com/artdarek/go-unzip v1.0.1-0.20210323073738-f9883ad8bd15
