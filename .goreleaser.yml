@@ -35,6 +35,7 @@ snapshot:
   name_template: SNAPSHOT-{{ .Commit }}
 dockers:
 - dockerfile: build/package/Dockerfile
+  use: buildx
   image_templates:
   - "qumine/minecraft-server:latest-amd64"
   - "qumine/minecraft-server:{{.Tag}}-amd64"
@@ -43,7 +44,7 @@ dockers:
   ids:
   - minecraft-server
   build_flag_templates:
-  - "--build-arg=ARCH=amd64/"
+  - "--platform=linux/amd64"
   - "--label=org.opencontainers.image.title={{ .ProjectName }}"
   - "--label=org.opencontainers.image.description={{ .ProjectName }}"
   - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
@@ -53,6 +54,7 @@ dockers:
   - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
   - "--label=org.opencontainers.image.licenses=AGPL-3.0"
 - dockerfile: build/package/Dockerfile
+  use: buildx
   image_templates:
   - "qumine/minecraft-server:latest-arm64v8"
   - "qumine/minecraft-server:{{.Tag}}-arm64v8"
@@ -61,43 +63,7 @@ dockers:
   ids:
   - minecraft-server
   build_flag_templates:
-  - "--build-arg=ARCH=arm64v8/"
-  - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-  - "--label=org.opencontainers.image.description={{ .ProjectName }}"
-  - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
-  - "--label=org.opencontainers.image.source=https://github.com/qumine/minecraft-server"
-  - "--label=org.opencontainers.image.version={{ .Version }}"
-  - "--label=org.opencontainers.image.created={{.Date}}"
-  - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
-  - "--label=org.opencontainers.image.licenses=AGPL-3.0"
-- dockerfile: build/package/Dockerfile.jdk8
-  image_templates:
-  - "qumine/minecraft-server:latest-jdk8-amd64"
-  - "qumine/minecraft-server:{{.Tag}}-jdk8-amd64"
-  goos: linux
-  goarch: amd64
-  ids:
-  - minecraft-server
-  build_flag_templates:
-  - "--build-arg=ARCH=amd64/"
-  - "--label=org.opencontainers.image.title={{ .ProjectName }}"
-  - "--label=org.opencontainers.image.description={{ .ProjectName }}"
-  - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
-  - "--label=org.opencontainers.image.source=https://github.com/qumine/minecraft-server"
-  - "--label=org.opencontainers.image.version={{ .Version }}"
-  - "--label=org.opencontainers.image.created={{.Date}}"
-  - "--label=org.opencontainers.image.revision={{ .FullCommit }}"
-  - "--label=org.opencontainers.image.licenses=AGPL-3.0"
-- dockerfile: build/package/Dockerfile.jdk8
-  image_templates:
-  - "qumine/minecraft-server:latest-jdk8-arm64v8"
-  - "qumine/minecraft-server:{{.Tag}}-jdk8-arm64v8"
-  goos: linux
-  goarch: arm64
-  ids:
-  - minecraft-server
-  build_flag_templates:
-  - "--build-arg=ARCH=arm64v8/"
+  - "--platform=linux/arm64/v8"
   - "--label=org.opencontainers.image.title={{ .ProjectName }}"
   - "--label=org.opencontainers.image.description={{ .ProjectName }}"
   - "--label=org.opencontainers.image.url=https://github.com/qumine/minecraft-server"
@@ -115,14 +81,6 @@ docker_manifests:
   image_templates:
   - qumine/minecraft-server:{{.Tag}}-amd64
   - qumine/minecraft-server:{{.Tag}}-arm64v8
-- name_template: qumine/minecraft-server:latest-jdk8
-  image_templates:
-  - qumine/minecraft-server:latest-jdk8-amd64
-  - qumine/minecraft-server:latest-jdk8-arm64v8
-- name_template: qumine/minecraft-server:{{.Tag}}-jdk8
-  image_templates:
-  - qumine/minecraft-server:{{.Tag}}-jdk8-amd64
-  - qumine/minecraft-server:{{.Tag}}-jdk8-arm64v8
 changelog:
   filters:
     exclude:

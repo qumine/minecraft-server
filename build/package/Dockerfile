@@ -1,5 +1,4 @@
-ARG ARCH=
-FROM ${ARCH}openjdk:17-oraclelinux8
+FROM eclipse-temurin:17.0.4.1_1-jdk-alpine
 
 VOLUME /data
 EXPOSE 8080 25565
