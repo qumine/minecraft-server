@@ -1,12 +1,12 @@
-FROM eclipse-temurin:17.0.4.1_1-jdk-alpine
+FROM eclipse-temurin:17.0.4.1_1-jdk
 
 VOLUME /data
 EXPOSE 8080 25565
 
 COPY minecraft-server /usr/local/bin/qumine-server
 
-RUN microdnf update \
-&& microdnf install unzip nano \
+RUN apt update \
+&& apt install unzip nano \
 && groupadd -g 4242 -r qumine \
 && useradd -g 4242 -m -N -r -u 4242 qumine \
 # Tempfix for fabric installer
