@@ -8,7 +8,7 @@ require (
 	github.com/magiconair/properties v1.8.6
 	github.com/rivo/tview v0.0.0-20220911190240-55965cf21d8e
 	github.com/sirupsen/logrus v1.9.0
-	github.com/urfave/cli/v2 v2.23.4
+	github.com/urfave/cli/v2 v2.23.5
 	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 )
