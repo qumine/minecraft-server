@@ -9,7 +9,7 @@ require (
 	github.com/rivo/tview v0.0.0-20220911190240-55965cf21d8e
 	github.com/sirupsen/logrus v1.9.0
 	github.com/urfave/cli/v2 v2.23.5
-	google.golang.org/grpc v1.50.1
+	google.golang.org/grpc v1.51.0
 	google.golang.org/protobuf v1.28.1
 )
 
@@ -25,6 +25,6 @@ require (
 	golang.org/x/net v0.0.0-20220909164309-bea034e7d591 // indirect
 	golang.org/x/sys v0.0.0-20220909162455-aba9fc2a8ff2 // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.4.0 // indirect
 	google.golang.org/genproto v0.0.0-20220909194730-69f6226f97e5 // indirect
 )
