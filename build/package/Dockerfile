@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.5_8-jdk
+FROM eclipse-temurin:18.0.2.1_1-jdk
 
 VOLUME /data
 EXPOSE 8080 25565
