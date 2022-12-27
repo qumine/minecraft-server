@@ -67,7 +67,7 @@ func (s *Server) Update() error {
 		return err
 	}
 	if strings.HasSuffix(s.filename, ".zip") {
-		if _, err := unzip.New().Extract(s.filename, "."); err != nil {
+		if _, err := unzip.New().Extract(s.filename, "/data"); err != nil {
 			return err
 		}
 	}
