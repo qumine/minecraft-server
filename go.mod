@@ -9,7 +9,7 @@ require (
 	github.com/rivo/tview v0.0.0-20220911190240-55965cf21d8e
 	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/cli/v2 v2.26.0
-	google.golang.org/grpc v1.60.0
+	google.golang.org/grpc v1.60.1
 	google.golang.org/protobuf v1.31.0
 )
 
