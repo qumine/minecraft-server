@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/artdarek/go-unzip v1.0.1-0.20210323073738-f9883ad8bd15
-	github.com/gdamore/tcell/v2 v2.7.1
+	github.com/gdamore/tcell/v2 v2.7.4
 	github.com/magiconair/properties v1.8.7
 	github.com/rivo/tview v0.0.0-20220911190240-55965cf21d8e
 	github.com/sirupsen/logrus v1.9.3
