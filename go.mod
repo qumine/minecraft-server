@@ -7,7 +7,7 @@ toolchain go1.24.1
 require (
 	github.com/artdarek/go-unzip v1.0.1-0.20210323073738-f9883ad8bd15
 	github.com/gdamore/tcell/v2 v2.8.1
-	github.com/magiconair/properties v1.8.9
+	github.com/magiconair/properties v1.8.10
 	github.com/rivo/tview v0.0.0-20220911190240-55965cf21d8e
 	github.com/sirupsen/logrus v1.9.3
 	github.com/urfave/cli/v2 v2.27.6
