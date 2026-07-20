@@ -7,7 +7,7 @@ require (
 	github.com/gdamore/tcell/v2 v2.9.0
 	github.com/magiconair/properties v1.8.10
 	github.com/rivo/tview v0.42.0
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.9.4
 	github.com/urfave/cli/v2 v2.27.7
 	google.golang.org/grpc v1.79.3
 	google.golang.org/protobuf v1.36.10
