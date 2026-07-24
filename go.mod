@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/artdarek/go-unzip v1.0.1-0.20210323073738-f9883ad8bd15
 	github.com/gdamore/tcell/v2 v2.13.10
-	github.com/magiconair/properties v1.8.10
+	github.com/magiconair/properties v1.18.11
 	github.com/rivo/tview v0.42.0
 	github.com/sirupsen/logrus v1.9.4
 	github.com/urfave/cli/v2 v2.27.7
